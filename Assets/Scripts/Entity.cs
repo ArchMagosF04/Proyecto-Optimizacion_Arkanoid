@@ -8,4 +8,9 @@ public class Entity
 
     protected Vector3 direction;
     protected float speed;
+
+    public Transform GetTransform()
+    {
+        return self;
+    }
 }

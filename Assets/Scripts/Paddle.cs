@@ -8,10 +8,13 @@ public class Paddle : Entity
 {
     private int Xdir;
     Transform rootedBall;
+    float leftLimit, rightLimit;
 
-    public Paddle(float speed)
+    public Paddle(float speed, float leftLimit, float rightLimit)
     {
         this.speed = speed;
+        this.leftLimit = leftLimit;
+        this.rightLimit = rightLimit;
     }
 
     public void Awake(Transform target)
@@ -33,6 +36,11 @@ public class Paddle : Entity
     {
         direction.x = xInput;
 
+        if ((direction.x > 0 && self.position.x + self.localScale.x / 2 >= rightLimit) || (direction.x < 0 && self.position.x - self.localScale.x / 2 <= leftLimit))
+        {
+            direction.x = 0f;
+        }
+        
         self.position += direction * (speed * deltaTime);
 
         if (rootedBall != null)

@@ -6,8 +6,8 @@ public class BallPool
 {
     private int startingCount = 3;
 
-    public Stack<Ball> objectsOnReserve = new Stack<Ball>();
-    public List<Ball> objectsInUse = new List<Ball>();
+    public Queue<Ball> objectsOnReserve = new Queue<Ball>();
+    //public List<Ball> objectsInUse = new List<Ball>();
 
     public BallPool(int count) 
     {
@@ -20,31 +20,45 @@ public class BallPool
         {
             GameObject newBall = GameManager.Instance.SpawnBall();
 
-            Ball ball = new Ball(GameManager.Instance.leftLimit, GameManager.Instance.rightLimit, GameManager.Instance.topLimit, GameManager.Instance.bottomLimit);
-            ball.Awake(newBall.transform);
-            objectsOnReserve.Push(ball);
+            Ball ball = new Ball(newBall.transform ,GameManager.Instance.leftLimit, GameManager.Instance.rightLimit, GameManager.Instance.topLimit, GameManager.Instance.bottomLimit);
+            ball.Awake();
+            ball.ActivateBall(false);
+            objectsOnReserve.Enqueue(ball);
         }
     }
 
-    public Ball GetObject()
+    public Ball GetBall()
     {
-        Ball newObject = default;
-
-        if (objectsOnReserve.Count > 0)
-        {
-            newObject = objectsOnReserve.Pop();
-            objectsInUse.Add(newObject);
-        }
-
-        return newObject;
+        Ball newBall = objectsOnReserve.Dequeue();
+        newBall.ActivateBall(true);
+        return newBall;
     }
 
-    public void RecycleObject(Ball newObject)
+    public void ReturnBall(Ball ball)
     {
-        if (objectsInUse.Contains(newObject))
-        {
-            objectsInUse.Remove(newObject);
-            objectsOnReserve.Push(newObject);
-        }
+        ball.ActivateBall(false);
+        objectsOnReserve.Enqueue(ball);
     }
+
+    //public Ball GetObject()
+    //{
+    //    Ball newObject = default;
+
+    //    if (objectsOnReserve.Count > 0)
+    //    {
+    //        newObject = objectsOnReserve.Pop();
+    //        objectsInUse.Add(newObject);
+    //    }
+
+    //    return newObject;
+    //}
+
+    //public void RecycleObject(Ball newObject)
+    //{
+    //    if (objectsInUse.Contains(newObject))
+    //    {
+    //        objectsInUse.Remove(newObject);
+    //        objectsOnReserve.Push(newObject);
+    //    }
+    //}
 }

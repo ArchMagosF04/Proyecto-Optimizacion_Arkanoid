@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     private List<Ball> balls = new List<Ball>();
     [SerializeField] private GameObject ballPrefab;
 
-    [SerializeField] private Transform paddle;
+    [SerializeField] public Transform paddle;
     [SerializeField] private Transform ballSpawnPoint;
     private Paddle player;
 
@@ -39,10 +39,9 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        GameObject ballGameObject = Instantiate(ballPrefab);
+        player = new Paddle(paddleSpeed, leftLimit, rightLimit);
 
-
-        player = new Paddle(paddleSpeed);
+        ballPool.InitializePool();
 
         SpawnBallOnPaddle();
 
@@ -55,7 +54,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < balls.Count; i++)
         {
-            if (balls[i] != null) balls[i].Update(deltaTime);
+            if (balls[i] != null && balls[i].IsActive) balls[i].Update(deltaTime, paddle);
         }
         
         xDir = Input.GetAxisRaw("Horizontal");
@@ -84,7 +83,6 @@ public class GameManager : MonoBehaviour
 
     public void DestroyBall(Ball ball, Transform transform)
     {
- 
         Destroy(transform.gameObject);
         balls.Remove(ball);
         SpawnBallOnPaddle();
@@ -92,17 +90,25 @@ public class GameManager : MonoBehaviour
 
     public void SpawnBallOnPaddle()
     {
-        GameObject ballGameObject = Instantiate(ballPrefab, ballSpawnPoint.position, Quaternion.identity);
-        Ball ball = new Ball(leftLimit, rightLimit, topLimit, bottomLimit);
-        ball.Awake(ballGameObject.transform);
+        Ball ball = ballPool.GetBall();
+        ball.Awake();
+        Transform ballPos = ball.GetTransform();
+        ballPos.position = ballSpawnPoint.position;
         balls.Add(ball);
-        player.SetBall(ballGameObject.transform);
+        player.SetBall(ballPos);
     }
 
     public GameObject SpawnBall()
     {
         GameObject ballGameObject = Instantiate(ballPrefab, ballSpawnPoint.position, Quaternion.identity);
         return ballGameObject;
+    }
+
+    public void ReturnBallToPool(Ball ball)
+    {
+        ballPool.ReturnBall(ball);
+        balls.Remove(ball);
+        SpawnBallOnPaddle();
     }
 
     public void DisableBall(Transform ball)
