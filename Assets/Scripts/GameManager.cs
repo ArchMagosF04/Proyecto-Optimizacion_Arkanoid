@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public Transform paddle;
     [SerializeField] private Transform ballSpawnPoint;
-    private Paddle player;
+    public Paddle player;
 
     public BallPool ballPool = new BallPool(3);
 
