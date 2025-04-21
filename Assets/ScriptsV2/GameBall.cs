@@ -55,7 +55,7 @@ public class GameBall : GameEntity
                 PaddleCollision(deltaTime, nextPosition);
             }
 
-            if (hitBufferTimer <= 0) BrickCollision(deltaTime, nextPosition, bricks);
+            if (hitBufferTimer <= 0) BricksCollision(bricks);
 
             BufferCountdown(deltaTime);
         }
@@ -157,7 +157,7 @@ public class GameBall : GameEntity
         }
     }
 
-    private void BrickCollision(float deltaTime, Vector3 nextPosition, List<Brick> bricks)
+    private void BrickCollision(Vector3 nextPosition, List<Brick> bricks)
     {
         for (int i = 0; i < bricks.Count; i++)
         {
@@ -188,6 +188,53 @@ public class GameBall : GameEntity
         }
     }
 
+    public void BricksCollision(List<Brick> bricks)
+    {
+        foreach (Brick brick in bricks)
+        {
+            if (brick == null) return;
+
+            bool onSameColumn = false;
+            bool onSameRow = false;
+
+            float leftSide = brick.transform.position.x - (1.75f - 0.3f);
+            float rightSide = brick.transform.position.x + (1.75f + 0.3f);
+            float upperSide = brick.transform.position.y + 1;
+            float lowerSide = brick.transform.position.y - 1;
+
+            if (transform.position.x <= rightSide && transform.position.x >= leftSide)
+            {
+                onSameColumn = true;
+            }
+            if (transform.position.y <= upperSide && transform.position.y >= lowerSide)
+            {
+                onSameRow = true;
+            }
+
+            if (circleRect(transform.position.x, transform.position.y, 0.5f, brick.transform.position.x, brick.transform.position.y, brick.transform.lossyScale.x, brick.transform.lossyScale.y) && hitBufferTimer <= 0)
+            {
+                if (onSameColumn)
+                {
+                    direction.y *= -1;
+                    hitBufferTimer = hitBufferLength;
+                    bricks.Remove(brick);
+                    brick.DestroyBrick();
+                    return; // Salimos si hubo una colisión
+                }
+                if (onSameRow)
+                {
+                    direction.x *= -1;
+                    hitBufferTimer = hitBufferLength;
+                    bricks.Remove(brick);
+                    brick.DestroyBrick();
+                    return; // Salimos si hubo una colisión
+                }
+
+            }
+
+        }
+    }
+
     private void OnBallLost()
     {
         Debug.Log("Ball lost");
@@ -198,5 +245,31 @@ public class GameBall : GameEntity
     public void ToggleGameObject(bool input)
     {
         transform.gameObject.SetActive(input);
+    }
+
+    public bool circleRect(float cx, float cy, float radius, float rx, float ry, float rw, float rh)
+    {
+
+        // temporary variables to set edges for testing
+        float testX = cx;
+        float testY = cy;
+
+        // which edge is closest?
+        if (cx < rx - rw / 2) testX = rx;      // test left edge
+        else if (cx > rx + rw / 2) testX = rx + rw;   // right edge
+        if (cy < ry - rh / 2) testY = ry;      // top edge
+        else if (cy > ry + rh / 2) testY = ry + rh;   // bottom edge
+
+        // get distance from closest edges
+        float distX = cx - testX;
+        float distY = cy - testY;
+        float distance = Mathf.Sqrt((distX * distX) + (distY * distY));
+
+        // if the distance is less than the radius, collision!
+        if (distance <= radius)
+        {
+            return true;
+        }
+        return false;
     }
 }
