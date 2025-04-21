@@ -115,4 +115,9 @@ public class GameManager : MonoBehaviour
     {
         ball.gameObject.SetActive(false);
     }
+
+    public void OnBallDeath(Ball ball)
+    {
+
+    }
 }
