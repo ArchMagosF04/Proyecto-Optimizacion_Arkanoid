@@ -2006,6 +2006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballPrefab: {fileID: 88252716107173781, guid: 56abdc003e41a6e4a9c8ab167d5416bc, type: 3}
   paddle: {fileID: 665718831}
+  bricksWalls: []
   ballSpawnPoint: {fileID: 1256450813}
   leftLimit: -15
   rightLimit: 15

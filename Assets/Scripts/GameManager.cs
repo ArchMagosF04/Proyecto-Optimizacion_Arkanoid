@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject ballPrefab;
 
     [SerializeField] public Transform paddle;
+    [SerializeField] public List<Transform> bricksWalls;
     [SerializeField] private Transform ballSpawnPoint;
     public Paddle player;
 
@@ -54,7 +55,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < balls.Count; i++)
         {
-            if (balls[i] != null && balls[i].IsActive) balls[i].Update(deltaTime, paddle);
+            if (balls[i] != null && balls[i].IsActive) balls[i].Update(deltaTime, paddle, bricksWalls);
         }
         
         xDir = Input.GetAxisRaw("Horizontal");
@@ -114,5 +115,10 @@ public class GameManager : MonoBehaviour
     public void DisableBall(Transform ball)
     {
         ball.gameObject.SetActive(false);
+    }
+
+    public void DisableBlock(Transform block)
+    {
+        block.gameObject.SetActive(false);
     }
 }
