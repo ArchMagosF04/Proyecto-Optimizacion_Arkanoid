@@ -6,21 +6,21 @@ using Random = UnityEngine.Random;
 
 public class UpdateManager : MonoBehaviour
 {
-    public static UpdateManager Instance;
+    public static UpdateManager Instance; //instance of Manager that can be called from other scrits
 
     [Header("Game Components")]
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject brickPrefab;
 
     [Space(10)]
-
+    //Game boundaries
     [SerializeField] private Transform rightWall;
     [SerializeField] private Transform leftWall;
     [SerializeField] private Transform topWall;
     [SerializeField] private Transform bottomWall;
 
     [Space(10)]
-
+    
     [SerializeField] private Transform paddle;
     [SerializeField] private Transform ballSpawnPoint;
     [SerializeField] private Transform brickSpawnPoint;
@@ -69,13 +69,12 @@ public class UpdateManager : MonoBehaviour
         SetGameBoundaries();
         SetPlayer();
         InitializeGame();
-        SpawnBricks(4, 7, 1.5f, 4f);
+        //SpawnBricks(4, 7, 1.5f, 4f);
         GetBallToLaunch();
     }
 
     private void Update()
     {
-        
         deltaTime = Time.deltaTime;
 
         Inputs();
@@ -88,7 +87,7 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
-    private void Inputs()
+    private void Inputs() //detectes inputs
     {
         xMoveInput = Input.GetAxisRaw("Horizontal");
 
@@ -99,7 +98,7 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
-    private void LaunchBall()
+    private void LaunchBall() //causes the ball to start moving with a random direction upward
     {
         Vector3 launchDirection = Vector3.zero;
 
@@ -110,20 +109,20 @@ public class UpdateManager : MonoBehaviour
         ballToLaunch.LauchBall(launchDirection);
     }
 
-    private void InitializeGame()
+    private void InitializeGame() //set somethings at the start of the game
     {
         ballIsActive = false;
         pool = new Pool(5);
         pool.Initialize();
     }
 
-    private void GetBallToLaunch()
+    private void GetBallToLaunch() //get a ball from the pool and set in the padel
     {
         ballToLaunch = pool.GetBall();
         ballToLaunch.Initialize(ballSpawnPoint);
     }
 
-    public GameBall SpawnBall()
+    public GameBall SpawnBall() //Instantiates a new ball
     {
         GameObject newBall = Instantiate(ballPrefab, ballSpawnPoint.position, Quaternion.identity);
         GameBall ball = new GameBall(newBall.transform, ballSpeed, leftLimit, rightLimit, topLimit, bottomLimit, player);
@@ -131,7 +130,7 @@ public class UpdateManager : MonoBehaviour
         return ball;
     }
 
-    private void SetGameBoundaries()
+    private void SetGameBoundaries() //calculates the cordinates of the game boundaries
     {
         rightLimit = rightWall.position.x - rightWall.lossyScale.x / 2;
         leftLimit = leftWall.position.x + leftWall.lossyScale.x / 2;
@@ -139,12 +138,12 @@ public class UpdateManager : MonoBehaviour
         bottomLimit = bottomWall.position.y + bottomWall.lossyScale.y / 2;
     }
 
-    private void SetPlayer()
+    private void SetPlayer()//Create the player paddle
     {
         player = new PlayerPaddle(paddle, paddleSpeed, leftLimit, rightLimit);
     }
 
-    private void SpawnBricks(int rows, int colums, float rowSeparation, float columnSeparation)
+    private void SpawnBricks(int rows, int colums, float rowSeparation, float columnSeparation) //Spawns the bricks across the screen
     {
         for (int i = 0; i < rows; i++)
         {
@@ -159,13 +158,13 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
-    public void OnBrickDestruction(Brick brick)
+    public void OnBrickDestruction(Brick brick) //Destroy the given brick
     {
         Destroy(brick.transform.gameObject);
         brickList.Remove(brick);
     }
 
-    public void OnBallDeath(GameBall ball)
+    public void OnBallDeath(GameBall ball)//Gets called when a ball exits the screen
     {
         ballsUsed++;
 

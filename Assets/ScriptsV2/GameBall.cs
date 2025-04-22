@@ -55,7 +55,7 @@ public class GameBall : GameEntity
                 PaddleCollision(deltaTime, nextPosition);
             }
 
-            if (hitBufferTimer <= 0) BricksCollision(bricks);
+            //if (hitBufferTimer <= 0) BricksCollision(bricks);
 
             BufferCountdown(deltaTime);
         }
@@ -106,10 +106,10 @@ public class GameBall : GameEntity
         }
     }
 
+   
     private void PaddleCollision(float deltaTime, Vector3 nextPosition)
     {
         bool onSameX = false;
-        bool onSameY = false;
 
         float topSide = playerPaddle.transform.position.y + playerPaddle.transform.lossyScale.y / 2;
         float bottomSide = playerPaddle.transform.position.y - playerPaddle.transform.lossyScale.y / 2;
@@ -118,46 +118,16 @@ public class GameBall : GameEntity
 
         if (nextPosition.x > leftSide && nextPosition.x < rightSide) { onSameX = true; }
 
-        if (nextPosition.y > bottomSide && nextPosition.y < topSide) { onSameY = true; }
-
-        if (onSameX && nextPosition.y - radius <= topSide /*&& !onSameY*/)
+        if (onSameX && nextPosition.y - radius <= topSide && nextPosition.y >= bottomSide)
         {
             direction.y *= -1;
             hitBufferTimer = hitBufferLength;
+            Debug.Log("paddle ");
             return;
-        }
-
-        if (onSameY && ((nextPosition.x + radius >= leftSide && direction.x > 0) || (nextPosition.x - radius <= rightSide && direction.x < 0)))
-        {
-            //if (nextPosition.x + radius >= leftSide)
-            //{
-            //    if (direction.x > 0)
-            //    {
-            //        direction.x *= -1;
-            //    }
-            //    else 
-            //    {
-            //        direction.x *= 1.1f;
-            //    }
-            //}
-            //else if (nextPosition.x - radius <= rightSide)
-            //{
-            //    if (direction.x < 0)
-            //    {
-            //        direction.x *= -1;
-            //    }
-            //    else
-            //    {
-            //        direction.x *= 1.1f;
-            //    }
-            //}
-
-            direction.x *= -1;
-            hitBufferTimer = hitBufferLength;
         }
     }
 
-    private void BrickCollision(Vector3 nextPosition, List<Brick> bricks)
+        private void BrickCollision(Vector3 nextPosition, List<Brick> bricks)
     {
         for (int i = 0; i < bricks.Count; i++)
         {
@@ -184,13 +154,14 @@ public class GameBall : GameEntity
                     bricks[i].DestroyBrick();
                     hitBufferTimer = hitBufferLength;
                 }
+                Debug.Log("brick ");
             }
         }
     }
 
     public void BricksCollision(List<Brick> bricks)
     {
-        foreach (Brick brick in bricks)
+        foreach (Brick brick in bricks) //calculetes the collision for each brick in the world 
         {
             if (brick == null) return;
 
@@ -219,7 +190,7 @@ public class GameBall : GameEntity
                     hitBufferTimer = hitBufferLength;
                     bricks.Remove(brick);
                     brick.DestroyBrick();
-                    return; // Salimos si hubo una colisión
+                    return; // exit if was a collision
                 }
                 if (onSameRow)
                 {
@@ -227,7 +198,7 @@ public class GameBall : GameEntity
                     hitBufferTimer = hitBufferLength;
                     bricks.Remove(brick);
                     brick.DestroyBrick();
-                    return; // Salimos si hubo una colisión
+                    return; // exit if was a collision
                 }
 
             }
@@ -271,5 +242,44 @@ public class GameBall : GameEntity
             return true;
         }
         return false;
+    }
+    private bool intersects(Transform rect)
+    {
+        float disX = Mathf.Abs(transform.position.x - rect.position.x);
+        float disY = Mathf.Abs(transform.position.y - rect.position.y);
+
+        if (disX > (rect.lossyScale.x / 2 + transform.lossyScale.x / 2) || (disY > (rect.lossyScale.y / 2 + transform.lossyScale.y / 2))) 
+            { return false; }
+        //if (disY > (rect.lossyScale.y / 2 + transform.lossyScale.y / 2)) { return false; }
+
+        if (disX <= (rect.lossyScale.x / 2)) 
+        {
+            direction.x *= -1;
+            hitBufferTimer = hitBufferLength;
+            Debug.Log("hitX");
+            return true; 
+        }
+        if (disY <= (rect.lossyScale.y / 2)) 
+        {
+            direction.y *= -1;
+            hitBufferTimer = hitBufferLength;
+            Debug.Log("hitY");
+            return true; 
+        }
+
+        float cornerDistance = Mathf.Pow(disX - rect.lossyScale.x / 2,2) + Mathf.Pow(disY - rect.lossyScale.y / 2,2);
+
+        if (cornerDistance <= Mathf.Pow(transform.lossyScale.x / 2, 2))
+        {
+            direction *= -1;
+            hitBufferTimer = hitBufferLength;
+            Debug.Log("hit");
+            return true;
+        }
+        else 
+        { 
+            return false;
+        }
+
     }
 }

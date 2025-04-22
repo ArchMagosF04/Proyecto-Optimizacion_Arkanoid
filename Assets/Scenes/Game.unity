@@ -132,6 +132,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6194290784565148505, guid: d9412209555e325448e44033693ea573, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6194290784565148505, guid: d9412209555e325448e44033693ea573, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -879,7 +883,7 @@ MonoBehaviour:
   ballSpawnPoint: {fileID: 1507641203}
   brickSpawnPoint: {fileID: 1655717116}
   paddleSpeed: 10
-  ballSpeed: 15
+  ballSpeed: 7
   ballLives: 5
 --- !u!4 &2051389667
 Transform:
