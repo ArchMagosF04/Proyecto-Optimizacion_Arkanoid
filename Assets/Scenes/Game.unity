@@ -132,10 +132,6 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6194290784565148505, guid: d9412209555e325448e44033693ea573, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6194290784565148505, guid: d9412209555e325448e44033693ea573, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -373,7 +369,7 @@ Transform:
   m_GameObject: {fileID: 540314748}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 9.94, z: -19}
+  m_LocalPosition: {x: 0, y: 13.9, z: -24.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -532,7 +528,7 @@ Transform:
   m_GameObject: {fileID: 937309639}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.5, y: 2, z: 0}
+  m_LocalPosition: {x: -15.5, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 35, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -669,7 +665,7 @@ Transform:
   m_GameObject: {fileID: 1170893462}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.5, y: 2, z: 0}
+  m_LocalPosition: {x: 15.5, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 35, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -838,7 +834,7 @@ Transform:
   m_GameObject: {fileID: 1655717115}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12, y: 16, z: 0}
+  m_LocalPosition: {x: -10, y: 21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -883,7 +879,7 @@ MonoBehaviour:
   ballSpawnPoint: {fileID: 1507641203}
   brickSpawnPoint: {fileID: 1655717116}
   paddleSpeed: 10
-  ballSpeed: 7
+  ballSpeed: 15
   ballLives: 5
 --- !u!4 &2051389667
 Transform:
@@ -928,7 +924,7 @@ Transform:
   m_GameObject: {fileID: 2056439265}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 20, z: 0}
+  m_LocalPosition: {x: 0, y: 26, z: 0}
   m_LocalScale: {x: 32, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

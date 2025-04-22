@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameBall : GameEntity
 {
@@ -55,7 +56,7 @@ public class GameBall : GameEntity
                 PaddleCollision(deltaTime, nextPosition);
             }
 
-            //if (hitBufferTimer <= 0) BricksCollision(bricks);
+            if (hitBufferTimer <= 0) BrickCollision(nextPosition ,bricks);
 
             BufferCountdown(deltaTime);
         }
@@ -116,18 +117,26 @@ public class GameBall : GameEntity
         float rightSide = playerPaddle.transform.position.x + playerPaddle.transform.lossyScale.x / 2;
         float leftSide = playerPaddle.transform.position.x - playerPaddle.transform.lossyScale.x / 2;
 
-        if (nextPosition.x > leftSide && nextPosition.x < rightSide) { onSameX = true; }
+        if (nextPosition.x + radius > leftSide && nextPosition.x - radius < rightSide) { onSameX = true; }
 
         if (onSameX && nextPosition.y - radius <= topSide && nextPosition.y >= bottomSide)
         {
             direction.y *= -1;
+
+            float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.transform.position.x);
+            float horizontalAngle = (distanceFromCenter / 1.5f) * 0.6f;
+            if (nextPosition.x < playerPaddle.transform.position.x)
+            {
+                horizontalAngle *= -1;
+            }
+
+            direction.x = horizontalAngle;
             hitBufferTimer = hitBufferLength;
-            Debug.Log("paddle ");
             return;
         }
     }
 
-        private void BrickCollision(Vector3 nextPosition, List<Brick> bricks)
+    private void BrickCollision(Vector3 nextPosition, List<Brick> bricks)
     {
         for (int i = 0; i < bricks.Count; i++)
         {
@@ -140,7 +149,7 @@ public class GameBall : GameEntity
 
                 if (nextPosition.y > bricks[i].bottomSide && nextPosition.y < bricks[i].topSide) { onSameY = true; }
 
-                if (onSameX && (nextPosition.y - radius <= bricks[i].topSide || nextPosition.y + radius >= bricks[i].bottomSide))
+                if (onSameX && (nextPosition.y - radius <= bricks[i].topSide && nextPosition.y + radius >= bricks[i].bottomSide))
                 {
                     direction.y *= -1;
                     bricks[i].DestroyBrick();
@@ -148,61 +157,14 @@ public class GameBall : GameEntity
                     return;
                 }
 
-                if (onSameY && (nextPosition.x + radius >= bricks[i].leftSide || nextPosition.x - radius <= bricks[i].rightSide))
+                if (onSameY && (nextPosition.x + radius >= bricks[i].leftSide && nextPosition.x - radius <= bricks[i].rightSide))
                 {
                     direction.x *= -1;
                     bricks[i].DestroyBrick();
                     hitBufferTimer = hitBufferLength;
                 }
-                Debug.Log("brick ");
-            }
-        }
-    }
-
-    public void BricksCollision(List<Brick> bricks)
-    {
-        foreach (Brick brick in bricks) //calculetes the collision for each brick in the world 
-        {
-            if (brick == null) return;
-
-            bool onSameColumn = false;
-            bool onSameRow = false;
-
-            float leftSide = brick.transform.position.x - (1.75f - 0.3f);
-            float rightSide = brick.transform.position.x + (1.75f + 0.3f);
-            float upperSide = brick.transform.position.y + 1;
-            float lowerSide = brick.transform.position.y - 1;
-
-            if (transform.position.x <= rightSide && transform.position.x >= leftSide)
-            {
-                onSameColumn = true;
-            }
-            if (transform.position.y <= upperSide && transform.position.y >= lowerSide)
-            {
-                onSameRow = true;
-            }
-
-            if (circleRect(transform.position.x, transform.position.y, 0.5f, brick.transform.position.x, brick.transform.position.y, brick.transform.lossyScale.x, brick.transform.lossyScale.y) && hitBufferTimer <= 0)
-            {
-                if (onSameColumn)
-                {
-                    direction.y *= -1;
-                    hitBufferTimer = hitBufferLength;
-                    bricks.Remove(brick);
-                    brick.DestroyBrick();
-                    return; // exit if was a collision
-                }
-                if (onSameRow)
-                {
-                    direction.x *= -1;
-                    hitBufferTimer = hitBufferLength;
-                    bricks.Remove(brick);
-                    brick.DestroyBrick();
-                    return; // exit if was a collision
-                }
 
             }
-
         }
     }
 
@@ -216,70 +178,5 @@ public class GameBall : GameEntity
     public void ToggleGameObject(bool input)
     {
         transform.gameObject.SetActive(input);
-    }
-
-    public bool circleRect(float cx, float cy, float radius, float rx, float ry, float rw, float rh)
-    {
-
-        // temporary variables to set edges for testing
-        float testX = cx;
-        float testY = cy;
-
-        // which edge is closest?
-        if (cx < rx - rw / 2) testX = rx;      // test left edge
-        else if (cx > rx + rw / 2) testX = rx + rw;   // right edge
-        if (cy < ry - rh / 2) testY = ry;      // top edge
-        else if (cy > ry + rh / 2) testY = ry + rh;   // bottom edge
-
-        // get distance from closest edges
-        float distX = cx - testX;
-        float distY = cy - testY;
-        float distance = Mathf.Sqrt((distX * distX) + (distY * distY));
-
-        // if the distance is less than the radius, collision!
-        if (distance <= radius)
-        {
-            return true;
-        }
-        return false;
-    }
-    private bool intersects(Transform rect)
-    {
-        float disX = Mathf.Abs(transform.position.x - rect.position.x);
-        float disY = Mathf.Abs(transform.position.y - rect.position.y);
-
-        if (disX > (rect.lossyScale.x / 2 + transform.lossyScale.x / 2) || (disY > (rect.lossyScale.y / 2 + transform.lossyScale.y / 2))) 
-            { return false; }
-        //if (disY > (rect.lossyScale.y / 2 + transform.lossyScale.y / 2)) { return false; }
-
-        if (disX <= (rect.lossyScale.x / 2)) 
-        {
-            direction.x *= -1;
-            hitBufferTimer = hitBufferLength;
-            Debug.Log("hitX");
-            return true; 
-        }
-        if (disY <= (rect.lossyScale.y / 2)) 
-        {
-            direction.y *= -1;
-            hitBufferTimer = hitBufferLength;
-            Debug.Log("hitY");
-            return true; 
-        }
-
-        float cornerDistance = Mathf.Pow(disX - rect.lossyScale.x / 2,2) + Mathf.Pow(disY - rect.lossyScale.y / 2,2);
-
-        if (cornerDistance <= Mathf.Pow(transform.lossyScale.x / 2, 2))
-        {
-            direction *= -1;
-            hitBufferTimer = hitBufferLength;
-            Debug.Log("hit");
-            return true;
-        }
-        else 
-        { 
-            return false;
-        }
-
     }
 }

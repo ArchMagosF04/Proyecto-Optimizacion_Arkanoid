@@ -69,11 +69,27 @@ public class UpdateManager : MonoBehaviour
         SetGameBoundaries();
         SetPlayer();
         InitializeGame();
-        //SpawnBricks(4, 7, 1.5f, 4f);
+        SpawnBricks(4, 7, 1.2f, 3.2f);
         GetBallToLaunch();
+
+        StartCoroutine(GameUpdate());
     }
 
-    private void Update()
+    //private void Update()
+    //{
+    //    deltaTime = Time.deltaTime;
+
+    //    Inputs();
+
+    //    player.Update(deltaTime, xMoveInput);
+
+    //    for (int i = 0; i < pool.ballsInUse.Count; i++)
+    //    {
+    //        pool.ballsInUse[i].Update(deltaTime, brickList);
+    //    }
+    //}
+
+    private IEnumerator GameUpdate()
     {
         deltaTime = Time.deltaTime;
 
@@ -85,6 +101,10 @@ public class UpdateManager : MonoBehaviour
         {
             pool.ballsInUse[i].Update(deltaTime, brickList);
         }
+
+        yield return null;
+
+        StartCoroutine(GameUpdate());
     }
 
     private void Inputs() //detectes inputs
@@ -102,7 +122,12 @@ public class UpdateManager : MonoBehaviour
     {
         Vector3 launchDirection = Vector3.zero;
 
-        float xDir = Random.Range(-0.75f, 0.75f);
+        float xDir = Random.Range(0.25f, 0.6f);
+
+        if (Random.value < 0.5f)
+        {
+            xDir *= -1;
+        }
 
         launchDirection = new Vector3(xDir, 1, 0);
 
@@ -166,8 +191,6 @@ public class UpdateManager : MonoBehaviour
 
     public void OnBallDeath(GameBall ball)//Gets called when a ball exits the screen
     {
-        ballsUsed++;
-
         pool.ReturnBall(ball);
         if (pool.ballsInUse.Count == 0)
         {
@@ -176,7 +199,15 @@ public class UpdateManager : MonoBehaviour
 
         if (!ballIsActive)
         {
-            GetBallToLaunch();
+            ballsUsed++;
+            if (ballsUsed < ballLives) //If the player has remaining lives then a new ball spawns ready to be launched
+            {
+                GetBallToLaunch();
+            }
+            else // If the player runs out of lives then the game ends.
+            {
+
+            }
         }
     }
 }
