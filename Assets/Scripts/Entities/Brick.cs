@@ -15,7 +15,7 @@ public class Brick : GameEntity
 
     private PowerUpType heldPowerUp;
 
-    public Brick(Transform transform, PowerUpType powerUp)
+    public Brick(Transform transform)
     {
        this.transform = transform;
 
@@ -23,10 +23,12 @@ public class Brick : GameEntity
         bottomSide = transform.position.y - transform.lossyScale.y / 2;
         rightSide = transform.position.x + transform.lossyScale.x / 2;
         leftSide = transform.position.x - transform.lossyScale.x / 2;
-
-        heldPowerUp = powerUp;
     }
 
+    public void SetPowerUp(PowerUpType powerUp)
+    {
+        heldPowerUp = powerUp;
+    }
     public void DestroyBrick()
     {
         if (heldPowerUp != PowerUpType.None)

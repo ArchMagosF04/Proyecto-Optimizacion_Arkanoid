@@ -57,4 +57,15 @@ public class Pool
             ballsOnReserve.Enqueue(ball);
         }
     }
+
+    public void ReturnAll()
+    {
+        for(int i = 0; i < ballsInUse.Count; i++)
+        {
+            ballsInUse[i].ToggleGameObject(false);
+            ballsOnReserve.Enqueue(ballsInUse[i]);
+        }
+
+        ballsInUse.Clear();
+    }
 }
