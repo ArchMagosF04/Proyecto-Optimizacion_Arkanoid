@@ -1,310 +1,181 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using UnityEditor;
 using UnityEngine;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
+using UnityEngine.UIElements;
 
-public class Ball : Entity
+public class Ball : GameEntity
 {
-    float leftLimit, rightLimit, topLimit, bottomLimit;
+    private float leftLimit;
+    private float rightLimit;
+    private float topLimit;
+    private float bottomLimit;
 
-    private bool hasLaunched = false;
+    public bool isLaunched {  get; private set; }
+    public bool isActive { get; private set; }
 
-    Collider2D[] collider2Ds;
+    private PlayerPaddle playerPaddle;
 
-    float collisionTimer = 0f;
-    bool hitOccured = false;
+    private float radius;
 
-    private bool isActive = false;
-    public bool IsActive => isActive;
+    private float hitBufferLength = 0.1f;
+    private float hitBufferTimer;
 
-    public Ball(Transform target, float leftLimit, float rightLimit, float topLimit, float bottomLimit)
+    public Ball(Transform transform, float speed, float leftLimit, float rightLimit, float topLimit, float bottomLimit, PlayerPaddle player) 
     {
-        this.self = target;
-
+        this.transform = transform;
+        this.speed = speed;
         this.leftLimit = leftLimit;
         this.rightLimit = rightLimit;
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
+        this.playerPaddle = player;
 
-        collider2Ds = new Collider2D[2];
+        isLaunched = false;
+        isActive = false;
+        radius = transform.lossyScale.x / 2;
     }
 
-    public void Awake()
+    public void Initialize(Transform spawn)
     {
-        hasLaunched = false;
-        hitOccured = false;
+        isLaunched = false;
+        transform.position = spawn.position;
     }
 
-    public void Update(float deltaTime, Transform paddle, List<Transform> bricks)
+    public void Update(float deltaTime, List<Brick> bricks)
     {
-        self.position += direction * (speed * deltaTime);
+        MoveBall(deltaTime);
 
-        BorderCollisions();
-        PaddleCollision(paddle);
-        BricksCollision(bricks);
-        TimerCount(deltaTime);
-    }
-
-    private void TimerCount(float deltaTime)
-    {
-        if (hitOccured)
+        if (isLaunched)
         {
-            collisionTimer -= deltaTime;
-            if (collisionTimer <= 0f)
+            Vector3 nextPosition = transform.position;
+            nextPosition += direction * (speed * deltaTime);
+
+            BoundariesCollision(deltaTime, nextPosition);
+            if (direction.y < 0 && hitBufferTimer <= 0)
             {
-                hitOccured = false;
+                PaddleCollision(deltaTime, nextPosition);
             }
+
+            if (hitBufferTimer <= 0) BrickCollision(nextPosition ,bricks);
+
+            BufferCountdown(deltaTime);
         }
     }
 
-    private void OnHit()
+    private void MoveBall(float deltaTime)
     {
-        hitOccured = true;
-        collisionTimer = 0.2f;
-    }
-
-    public void LaunchBall(float speed, Vector3 direction)
-    {
-        if (!hasLaunched)
+        if (isLaunched)
         {
-            this.speed = speed;
-            this.direction = direction;
-            hasLaunched = true;
+            transform.position += direction * (speed * deltaTime);
+        }
+        else
+        {
+            transform.position = new Vector3(playerPaddle.transform.position.x, transform.position.y, transform.position.z);
         }
     }
 
-    public void BorderCollisions()
+    public void LauchBall(Vector3 direction)
     {
-        if ((self.position.x >= rightLimit || self.position.x <= leftLimit) && !hitOccured)
+        if (!isLaunched)
+        {
+            this.direction = direction;
+            isLaunched = true;
+        }
+    }
+
+    private void BoundariesCollision(float deltaTime, Vector3 nextPosition)
+    {
+        if (nextPosition.x + radius >= rightLimit || nextPosition.x - radius <= leftLimit)
         {
             direction.x *= -1;
-            OnHit();
         }
-
-        if (self.position.y >= topLimit && !hitOccured)
+        if (nextPosition.y + radius >= topLimit)
         {
             direction.y *= -1;
-            OnHit();
         }
-
-        if (self.position.y <= bottomLimit)
+        if (transform.position.y - radius <= bottomLimit)
         {
-            GameManager.Instance.ReturnBallToPool(this);
+            OnBallLost();
         }
     }
 
-    public void PaddleCollision(Transform paddle)
+    private void BufferCountdown(float deltaTime)
     {
-        int hits = Physics2D.OverlapCircleNonAlloc(self.position, 0.55f, collider2Ds);
-
-        if (self.position.x > paddle.position.x - paddle.localScale.x/2 && self.position.x < paddle.position.x + paddle.localScale.x / 2)
+        if (hitBufferTimer > 0)
         {
-            if (hits > 1 && !hitOccured)
-            {
-                direction.y *= -1;
-                OnHit();
-            }
-        }
-        else if (self.position.y < paddle.position.y + paddle.localScale.y / 2) 
-        {
-            if (hits > 1 && !hitOccured)
-            {
-                direction.x *= -1;
-                OnHit();
-            }
+            hitBufferTimer -= deltaTime;
         }
     }
 
-    //public void BlockCollision()
-    //{
-    //    int hits = Physics2D.OverlapCircleNonAlloc(self.position, 0.55f, collider2Ds);
-
-    //}
-
-    //public void PaddleCollisionV2(Transform paddle, Paddle entity)
-    //{
-    //    float leftSide = paddle.position.x - paddle.localScale.x / 2;
-    //    float rightSide = paddle.position.x + paddle.localScale.x / 2;
-    //    float upperSide = paddle.position.y + paddle.localScale.y / 2;
-    //    float lowerSide = paddle.position.y - paddle.localScale.y / 2;
-
-
-    //    Vector3 closestPoint = new Vector3(
-    //        Mathf.Max(paddle.position.x - paddle.localScale.x / 2, Mathf.Min(self.position.x, paddle.position.x + paddle.localScale.x / 2)),
-    //        Mathf.Max(paddle.position.y - paddle.localScale.y / 2, Mathf.Min(self.position.y, paddle.position.y + paddle.localScale.y / 2)),
-    //        0
-    //    );
-
-    //    float distance = Vector3.Distance(self.position, closestPoint);
-
-    //    //if (distance <= self.position.x / 2)
-    //    //{
-    //    //    Vector3 penetrationDir = (self.position - closestPoint).normalized;
-    //    //    if (Mathf.Abs(penetrationDir.x) > Mathf.Abs(penetrationDir.y) && !hitOccured)
-    //    //    {
-    //    //        direction.y *= -1;
-    //    //        OnHit();
-    //    //    }
-    //    //    else if (Mathf.Abs(penetrationDir.x) < Mathf.Abs(penetrationDir.y) && !hitOccured)
-    //    //    {
-    //    //        direction.x *= -1;
-    //    //        OnHit();
-    //    //    }
-    //    //}
-
-    //    if (distance <= self.position.x / 2)
-    //    {
-    //        if (self.position.x <= rightSide && self.position.x >= leftSide && !hitOccured)
-    //        {
-    //            direction.y *= -1;
-    //            OnHit();
-    //        }
-    //        else if (self.position.y <= upperSide && self.position.y >= lowerSide && !hitOccured)
-    //        {
-    //            direction.x *= -1;
-    //            OnHit();
-    //        }
-    //    }
-    //}
-
-    public void PaddleCollisionV3(Transform paddle)
+   
+    private void PaddleCollision(float deltaTime, Vector3 nextPosition)
     {
-        //float leftSide = paddle.position.x - paddle.localScale.x / 2;
-        //float rightSide = paddle.position.x + paddle.localScale.x / 2;
-        //float upperSide = paddle.position.y + paddle.localScale.y / 2;
-        //float lowerSide = paddle.position.y - paddle.localScale.y / 2;
+        bool onSameX = false;
 
-        bool onSameColumn = false;
-        bool onSameRow = false;
+        float topSide = playerPaddle.transform.position.y + playerPaddle.transform.lossyScale.y / 2;
+        float bottomSide = playerPaddle.transform.position.y - playerPaddle.transform.lossyScale.y / 2;
+        float rightSide = playerPaddle.transform.position.x + playerPaddle.transform.lossyScale.x / 2;
+        float leftSide = playerPaddle.transform.position.x - playerPaddle.transform.lossyScale.x / 2;
 
-        float leftSide = paddle.position.x - (1.75f - 0.3f);
-        float rightSide = paddle.position.x + (1.75f + 0.3f);
-        float upperSide = paddle.position.y + 1;
-        float lowerSide = paddle.position.y - 1;
+        if (nextPosition.x + radius > leftSide && nextPosition.x - radius < rightSide) { onSameX = true; }
 
-        if (self.position.x <= rightSide && self.position.x >= leftSide)
+        if (onSameX && nextPosition.y - radius <= topSide && nextPosition.y >= bottomSide)
         {
-            onSameColumn = true;
-        }
-        if (self.position.y <= upperSide && self.position.y >= lowerSide)
-        {
-            onSameRow = true;
-        }
+            direction.y *= -1;
 
-        if (circleRect(self.position.x, self.position.y, 0.5f,  paddle.position.x, paddle.position.y, paddle.lossyScale.x, paddle.lossyScale.y) && !hitOccured)
-        {
-            if (onSameColumn)
+            float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.transform.position.x);
+            float horizontalAngle = (distanceFromCenter / 1.5f) * 0.6f;
+            if (nextPosition.x < playerPaddle.transform.position.x)
             {
-                direction.y *= -1;
-                OnHit();
-                return;
+                horizontalAngle *= -1;
             }
-            if (onSameRow)
-            {
-                if ((direction.x > 0 && paddle.position.x < self.position.x) || (direction.x < 0 && paddle.position.x > self.position.x))
-                {
-                    direction.x *= 2;
-                    OnHit();
-                }
-                else
-                {
-                    direction.x *= -1;
-                    OnHit();
-                }
-            }
+
+            direction.x = horizontalAngle;
+            hitBufferTimer = hitBufferLength;
+            return;
         }
     }
 
-    public void BricksCollision(List<Transform> bricks)
+    private void BrickCollision(Vector3 nextPosition, List<Brick> bricks)
     {
-        foreach (Transform brick in bricks)
+        for (int i = 0; i < bricks.Count; i++)
         {
-            bool onSameColumn = false;
-            bool onSameRow = false;
-
-            float leftSide = brick.position.x - (1.75f - 0.3f);
-            float rightSide = brick.position.x + (1.75f + 0.3f);
-            float upperSide = brick.position.y + 1;
-            float lowerSide = brick.position.y - 1;
-
-            if (self.position.x <= rightSide && self.position.x >= leftSide)
+            if (bricks[i] != null) 
             {
-                onSameColumn = true;
-            }
-            if (self.position.y <= upperSide && self.position.y >= lowerSide)
-            {
-                onSameRow = true;
-            }
+                bool onSameX = false;
+                bool onSameY = false;
 
-            if (circleRect(self.position.x, self.position.y, 0.5f, brick.position.x, brick.position.y, brick.lossyScale.x, brick.lossyScale.y) && !hitOccured)
-            {
-                if (onSameColumn)
+                if (nextPosition.x > bricks[i].leftSide && nextPosition.x < bricks[i].rightSide) { onSameX = true; }
+
+                if (nextPosition.y > bricks[i].bottomSide && nextPosition.y < bricks[i].topSide) { onSameY = true; }
+
+                if (onSameX && (nextPosition.y - radius <= bricks[i].topSide && nextPosition.y + radius >= bricks[i].bottomSide))
                 {
                     direction.y *= -1;
-                    OnHit();
-                    bricks.Remove(brick);
-                    GameManager.Instance.DisableBlock(brick);
-                    return; // Salimos si hubo una colisión
+                    bricks[i].DestroyBrick();
+                    hitBufferTimer = hitBufferLength;
+                    return;
                 }
-                if (onSameRow)
+
+                if (onSameY && (nextPosition.x + radius >= bricks[i].leftSide && nextPosition.x - radius <= bricks[i].rightSide))
                 {
-                    if ((direction.x > 0 && brick.position.x < self.position.x) || (direction.x < 0 && brick.position.x > self.position.x))
-                    {
-                        direction.x *= 2;
-                        OnHit();
-                    }
-                    else
-                    {
-                        direction.x *= -1;
-                        OnHit();
-                    }
-                    bricks.Remove(brick);
-                    GameManager.Instance.DisableBlock(brick);
-                    return; // Salimos si hubo una colisión
+                    direction.x *= -1;
+                    bricks[i].DestroyBrick();
+                    hitBufferTimer = hitBufferLength;
                 }
 
             }
-
         }
     }
 
-    public bool circleRect(float cx, float cy, float radius, float rx, float ry, float rw, float rh)
+    private void OnBallLost()
     {
-
-        // temporary variables to set edges for testing
-        float testX = cx;
-        float testY = cy;
-
-        // which edge is closest?
-        if (cx < rx - rw/2) testX = rx;      // test left edge
-        else if (cx > rx + rw/2) testX = rx + rw;   // right edge
-        if (cy < ry -rh/2) testY = ry;      // top edge
-        else if (cy > ry + rh/2) testY = ry + rh;   // bottom edge
-
-        // get distance from closest edges
-        float distX = cx - testX;
-        float distY = cy - testY;
-        float distance = Mathf.Sqrt((distX * distX) + (distY * distY));
-
-        // if the distance is less than the radius, collision!
-        if (distance <= radius)
-        {
-            return true;
-        }
-        return false;
+        isLaunched = false;
+        UpdateManager.Instance.OnBallDeath(this);
     }
 
-    public void ActivateBall(bool input)
+    public void ToggleGameObject(bool input)
     {
-        self.gameObject.SetActive(input);
-        isActive = input;
-
-        if (!input)
-        {
-            this.speed = 0;
-            this.direction = Vector3.zero;
-        }
+        transform.gameObject.SetActive(input);
     }
 }

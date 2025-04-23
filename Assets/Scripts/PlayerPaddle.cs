@@ -12,6 +12,9 @@ public class PlayerPaddle : GameEntity
     private float multiplier = 1f;
     private float extraSpeed = 2f;
 
+    private float multiplierDuration = 7f;
+    private float multiplierTimer;
+
     public PlayerPaddle(Transform transform, float speed, float leftLimit, float rightLimit)
     {
         this.transform = transform;
@@ -20,14 +23,11 @@ public class PlayerPaddle : GameEntity
         this.screenRightLimit = rightLimit;
     }
 
-    public void Initialize()
-    {
-
-    }
-
     public void Update(float deltaTime, float input)
     {
         MovePaddle(deltaTime, input);
+
+        if (isSpeedPowerUpActive) { SpeedMultiplerTimer(deltaTime); }
     }
 
     private void MovePaddle(float deltaTime, float input)
@@ -44,10 +44,28 @@ public class PlayerPaddle : GameEntity
 
     public void ToggleSpeedPowerUp(bool value)
     {
-        if (value) { multiplier = extraSpeed; }
+        if (value) 
+        {
+            isSpeedPowerUpActive = true;
+            multiplier = extraSpeed;
+            multiplierTimer = multiplierDuration;
+        }
         else
         {
+            isSpeedPowerUpActive = false;
             multiplier = 1f;
+        }
+    }
+
+    public void SpeedMultiplerTimer(float deltaTime)
+    {
+        if (multiplierTimer > 0f)
+        {
+            multiplierTimer -= deltaTime;
+        }
+        else
+        {
+            ToggleSpeedPowerUp(false);
         }
     }
 }

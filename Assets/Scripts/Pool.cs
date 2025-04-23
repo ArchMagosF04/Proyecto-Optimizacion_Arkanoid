@@ -6,8 +6,8 @@ public class Pool
 {
     private int startingSpawnAmount;
 
-    public Queue<GameBall> ballsOnReserve = new Queue<GameBall>();
-    public List<GameBall> ballsInUse = new List<GameBall>();
+    public Queue<Ball> ballsOnReserve = new Queue<Ball>();
+    public List<Ball> ballsInUse = new List<Ball>();
 
     public Pool(int startingSpawnAmount)
     {
@@ -22,18 +22,18 @@ public class Pool
         }
     }
 
-    public GameBall CreateBall()
+    public Ball CreateBall()
     {
-        GameBall newBall = UpdateManager.Instance.SpawnBall();
+        Ball newBall = UpdateManager.Instance.SpawnBall();
         newBall.ToggleGameObject(false);
         ballsOnReserve.Enqueue(newBall);
 
         return newBall;
     }
 
-    public GameBall GetBall()
+    public Ball GetBall()
     {
-        GameBall ball;
+        Ball ball;
 
         if (ballsOnReserve.Count > 0)
         {
@@ -48,7 +48,7 @@ public class Pool
         return ball;
     }
 
-    public void ReturnBall(GameBall ball)
+    public void ReturnBall(Ball ball)
     {
         if (ballsInUse.Contains(ball))
         {

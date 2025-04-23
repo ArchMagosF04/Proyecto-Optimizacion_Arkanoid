@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,6 +12,7 @@ public class UpdateManager : MonoBehaviour
     [Header("Game Components")]
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject brickPrefab;
+    [SerializeField] private GameObject multiballPrefab;
 
     [Space(10)]
     //Game boundaries
@@ -25,6 +27,8 @@ public class UpdateManager : MonoBehaviour
     [SerializeField] private Transform ballSpawnPoint;
     [SerializeField] private Transform brickSpawnPoint;
 
+    [SerializeField] private Material[] brickColors;
+    
     [Header("Game Variables")]
     [SerializeField] private float paddleSpeed = 10f;
 
@@ -33,19 +37,20 @@ public class UpdateManager : MonoBehaviour
     [SerializeField] private int ballLives = 5;
 
     //Game-field Limits
-    private float rightLimit;
-    private float leftLimit;
-    private float topLimit;
-    private float bottomLimit;
+    public float rightLimit {  get; private set; }
+    public float leftLimit {  get; private set; }
+    public float topLimit { get; private set; }
+    public float bottomLimit { get; private set; }
 
     //Input variables
     private float xMoveInput;
 
     //Class references
     private PlayerPaddle player;
-    private GameBall ballToLaunch;
+    private Ball ballToLaunch;
     private Pool pool;
     private List<Brick> brickList = new List<Brick>();
+    public List<IPowerUp> powerUpList = new List<IPowerUp>();
 
     //Game Status
     private bool ballIsActive;
@@ -53,6 +58,8 @@ public class UpdateManager : MonoBehaviour
 
     //Other
     private float deltaTime;
+
+    PU_Multiball powerup;
 
     private void Awake()
     {
@@ -87,6 +94,11 @@ public class UpdateManager : MonoBehaviour
     //    {
     //        pool.ballsInUse[i].Update(deltaTime, brickList);
     //    }
+
+    //    for (int i = 0; i < powerUpList.Count; i++)
+    //    {
+    //        if (powerUpList[i] != null) powerUpList[i].Update(deltaTime, paddle);
+    //    }
     //}
 
     private IEnumerator GameUpdate()
@@ -100,6 +112,11 @@ public class UpdateManager : MonoBehaviour
         for (int i = 0; i < pool.ballsInUse.Count; i++)
         {
             pool.ballsInUse[i].Update(deltaTime, brickList);
+        }
+
+        for (int i = 0; i < powerUpList.Count; i++)
+        {
+            if (powerUpList[i] != null) powerUpList[i].Update(deltaTime, paddle);
         }
 
         yield return null;
@@ -118,7 +135,7 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
-    private void LaunchBall() //causes the ball to start moving with a random direction upward
+    public void LaunchBall() //causes the ball to start moving with a random direction upward
     {
         Vector3 launchDirection = Vector3.zero;
 
@@ -141,18 +158,25 @@ public class UpdateManager : MonoBehaviour
         pool.Initialize();
     }
 
-    private void GetBallToLaunch() //get a ball from the pool and set in the padel
+    public void GetBallToLaunch() //get a ball from the pool and set in the padel
     {
         ballToLaunch = pool.GetBall();
         ballToLaunch.Initialize(ballSpawnPoint);
     }
 
-    public GameBall SpawnBall() //Instantiates a new ball
+    public Ball SpawnBall() //Instantiates a new ball
     {
         GameObject newBall = Instantiate(ballPrefab, ballSpawnPoint.position, Quaternion.identity);
-        GameBall ball = new GameBall(newBall.transform, ballSpeed, leftLimit, rightLimit, topLimit, bottomLimit, player);
+        Ball ball = new Ball(newBall.transform, ballSpeed, leftLimit, rightLimit, topLimit, bottomLimit, player);
 
         return ball;
+    }
+
+    public GameObject SpawnPowerUp(Vector3 spawnPoint)
+    {
+        GameObject powerUp = Instantiate(multiballPrefab);
+        powerUp.transform.position = spawnPoint;
+        return powerUp;
     }
 
     private void SetGameBoundaries() //calculates the cordinates of the game boundaries
@@ -168,8 +192,37 @@ public class UpdateManager : MonoBehaviour
         player = new PlayerPaddle(paddle, paddleSpeed, leftLimit, rightLimit);
     }
 
+    private Vector2[] SetPowerUpCoordinates(int rows, int colums)
+    {
+        Vector2[] coordinates = new Vector2[4];
+
+        List<int> availableRows = new List<int>();
+        List<int> availableColums = new List<int>();
+
+        for (int i = 0; i < rows; i++)
+        {
+            availableRows.Add(i);
+        }
+        for (int i = 0; i < colums; i++)
+        {
+            availableColums.Add(i);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            Vector2 pwLocation = new Vector2(Random.Range(0, availableRows.Count), Random.Range(0, availableColums.Count));
+            availableRows.RemoveAt((int)pwLocation.x);
+            availableColums.RemoveAt((int)pwLocation.y);
+            coordinates[i] = pwLocation;
+        }
+
+        return coordinates;
+    }
+
     private void SpawnBricks(int rows, int colums, float rowSeparation, float columnSeparation) //Spawns the bricks across the screen
     {
+        Vector2[] powerUpsPos = SetPowerUpCoordinates(rows, colums);
+
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < colums; j++)
@@ -177,24 +230,61 @@ public class UpdateManager : MonoBehaviour
                 GameObject newBrick = Instantiate(brickPrefab, brickSpawnPoint.position, Quaternion.identity);
                 newBrick.transform.position += new Vector3(columnSeparation * j, - rowSeparation * i, 0);
 
-                Brick brick = new Brick(newBrick.transform);
+                MeshRenderer mesh = newBrick.GetComponent<MeshRenderer>();
+                mesh.material = brickColors[j];
+
+                Brick brick = null;
+
+
+                if (PowerUpCheck(powerUpsPos, i, j))
+                {
+                    brick = new Brick(newBrick.transform, Brick.PowerUpType.MultiBall);
+                }
+                else
+                {
+                    brick = new Brick(newBrick.transform, Brick.PowerUpType.None);
+                }
+
                 brickList.Add(brick);
             }
         }
+    }
+
+    private bool PowerUpCheck(Vector2[] powerUpsPos, int posX, int posY)
+    {
+        for (int i = 0; i < powerUpsPos.Length; i++)
+        {
+            if (posX == (int)powerUpsPos[i].x && posY == (int)powerUpsPos[i].y)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void OnBrickDestruction(Brick brick) //Destroy the given brick
     {
         Destroy(brick.transform.gameObject);
         brickList.Remove(brick);
+
+        if (brickList.Count == 0)
+        {
+            WinGame();
+        }
     }
 
-    public void OnBallDeath(GameBall ball)//Gets called when a ball exits the screen
+    public void OnBallDeath(Ball ball)//Gets called when a ball exits the screen
     {
         pool.ReturnBall(ball);
         if (pool.ballsInUse.Count == 0)
         {
             ballIsActive = false;
+
+            for (int i = 0; i < powerUpList.Count; i++)
+            {
+                powerUpList[i].DestroyPowerUp();
+            }
         }
 
         if (!ballIsActive)
@@ -206,8 +296,23 @@ public class UpdateManager : MonoBehaviour
             }
             else // If the player runs out of lives then the game ends.
             {
-
+                LoseGame();
             }
         }
+    }
+
+    public void DestroyGameObject(GameObject go)
+    {
+        Destroy(go);
+    }
+
+    private void WinGame()
+    {
+        Debug.Log("YOU WIN");
+    }
+
+    private void LoseGame()
+    {
+        Debug.Log("YOU LOSE");
     }
 }
