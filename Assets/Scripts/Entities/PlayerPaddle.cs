@@ -30,7 +30,7 @@ public class PlayerPaddle : GameEntity
         if (isSpeedPowerUpActive) { SpeedMultiplerTimer(deltaTime); }
     }
 
-    private void MovePaddle(float deltaTime, float input)
+    private void MovePaddle(float deltaTime, float input) //Moves the paddle according to the received input value, while stopping at the left and right walls.
     {
         direction.x = input;
 
@@ -42,7 +42,7 @@ public class PlayerPaddle : GameEntity
         transform.position += direction * (speed * multiplier * deltaTime);
     }
 
-    public void ToggleSpeedPowerUp(bool value)
+    public void ToggleSpeedPowerUp(bool value) //Activates/Deactivates the bonus speed received from the speed powerup.
     {
         if (value) 
         {
@@ -57,7 +57,7 @@ public class PlayerPaddle : GameEntity
         }
     }
 
-    public void SpeedMultiplerTimer(float deltaTime)
+    public void SpeedMultiplerTimer(float deltaTime) //Countdown of the speed powerup effect.
     {
         if (multiplierTimer > 0f)
         {

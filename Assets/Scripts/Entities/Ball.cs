@@ -5,6 +5,8 @@ using UnityEngine.UIElements;
 
 public class Ball : GameEntity
 {
+    #region Variables
+
     private float leftLimit;
     private float rightLimit;
     private float topLimit;
@@ -19,6 +21,8 @@ public class Ball : GameEntity
 
     private float hitBufferLength = 0.1f;
     private float hitBufferTimer;
+
+    #endregion
 
     public Ball(Transform transform, float speed, float leftLimit, float rightLimit, float topLimit, float bottomLimit, PlayerPaddle player) 
     {
@@ -62,19 +66,21 @@ public class Ball : GameEntity
         }
     }
 
-    private void MoveBall(float deltaTime)
+    #region Movement
+
+    private void MoveBall(float deltaTime) //Updates the ball position.
     {
         if (isLaunched)
         {
             transform.position += direction * (speed * deltaTime);
         }
-        else
+        else //If the ball has not been launched then it follows the position of the paddle.
         {
             transform.position = new Vector3(playerPaddle.transform.position.x, transform.position.y, transform.position.z);
         }
     }
 
-    public void LauchBall(Vector3 direction)
+    public void LauchBall(Vector3 direction) //Launches the ball in the selected direction.
     {
         if (!isLaunched)
         {
@@ -83,7 +89,11 @@ public class Ball : GameEntity
         }
     }
 
-    private void BoundariesCollision(float deltaTime, Vector3 nextPosition)
+    #endregion
+
+    #region Collisions
+
+    private void BoundariesCollision(float deltaTime, Vector3 nextPosition) //Detects collision with the game walls.
     {
         if (nextPosition.x + radius >= rightLimit || nextPosition.x - radius <= leftLimit)
         {
@@ -99,7 +109,7 @@ public class Ball : GameEntity
         }
     }
 
-    private void BufferCountdown(float deltaTime)
+    private void BufferCountdown(float deltaTime) //Used to avoid the ball getting stuck during collisions.
     {
         if (hitBufferTimer > 0)
         {
@@ -108,7 +118,7 @@ public class Ball : GameEntity
     }
 
    
-    private void PaddleCollision(float deltaTime, Vector3 nextPosition)
+    private void PaddleCollision(float deltaTime, Vector3 nextPosition) //Detects the collision with the paddle.
     {
         bool onSameX = false;
 
@@ -123,7 +133,7 @@ public class Ball : GameEntity
         {
             direction.y *= -1;
 
-            float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.transform.position.x);
+            float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.transform.position.x); //Depending on how far away from the center of the paddle the ball hits then it will be launched more in that direction.
             float horizontalAngle = (distanceFromCenter / 1.5f) * 0.6f;
             if (nextPosition.x < playerPaddle.transform.position.x)
             {
@@ -136,7 +146,7 @@ public class Ball : GameEntity
         }
     }
 
-    private void BrickCollision(Vector3 nextPosition, List<Brick> bricks)
+    private void BrickCollision(Vector3 nextPosition, List<Brick> bricks) //Detecs the collision with all the active bricks.
     {
         for (int i = 0; i < bricks.Count; i++)
         {
@@ -167,6 +177,9 @@ public class Ball : GameEntity
             }
         }
     }
+
+    #endregion
+
 
     private void OnBallLost()
     {

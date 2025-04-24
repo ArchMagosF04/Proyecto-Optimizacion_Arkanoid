@@ -26,10 +26,12 @@ public class UpdateManager : MonoBehaviour
     [SerializeField] private Transform bottomWall;
 
     [Space(10)]
-    //Game Screens
+    //Game UI
     [SerializeField] private GameObject mainMenuScreen;
     [SerializeField] private GameObject winScreen;
     [SerializeField] private GameObject loseScreen;
+
+    [SerializeField] private GameObject[] livesCounter;
 
     [Space(10)]
 
@@ -76,6 +78,7 @@ public class UpdateManager : MonoBehaviour
     private float deltaTime;
 
     #endregion
+
     private void Awake()
     {
         if (Instance == null)
@@ -88,17 +91,18 @@ public class UpdateManager : MonoBehaviour
             return;
         }
 
-        ChangeGameState(GameStates.MainMenu);
+        ChangeGameState(GameStates.MainMenu); //The game starts in the main menu state.
 
         SetGameBoundaries();
         SetPlayer();
         SpawnBricks(1.2f, 3.2f);
 
-        StartCoroutine(OnUpdate());
+        StartCoroutine(OnUpdate()); //When the awake is done it begins the game loop that replaces Unity Update.
     }
 
     #region Update
-    private IEnumerator OnUpdate()
+
+    private IEnumerator OnUpdate() //Calls a different method depending on the current game state.
     {
         deltaTime = Time.deltaTime;
 
@@ -118,14 +122,12 @@ public class UpdateManager : MonoBehaviour
                 break;
         }
 
-        //if (pool != null) Debug.Log(pool.ballsInUse.Count);
-
         yield return null;
 
-        StartCoroutine(OnUpdate());
+        StartCoroutine(OnUpdate()); //At the end the coroutne calls itself again to continue the update loop.
     }
 
-    private void MenuUpdate()
+    private void MenuUpdate() 
     {
         MenuInputs();
     }  
@@ -147,19 +149,20 @@ public class UpdateManager : MonoBehaviour
     {
         GameInputs();
 
-        player.Update(deltaTime, xMoveInput);
+        player.Update(deltaTime, xMoveInput); //Updates the player, and sends it the movement input so it knows when to move.
 
-        for (int i = 0; i < pool.ballsInUse.Count; i++)
+        for (int i = 0; i < pool.ballsInUse.Count; i++) //Updates all the balls that are in an active state from the pool.
         {
             pool.ballsInUse[i].Update(deltaTime, activeBricksList);
         }
 
-        for (int i = 0; i < powerUpList.Count; i++)
+        for (int i = 0; i < powerUpList.Count; i++) //Updates all active powerup items.
         {
             if (powerUpList[i] != null) powerUpList[i].Update(deltaTime, paddle);
         }
     }
-    private void GameInputs() //detectes inputs
+
+    private void GameInputs() //Detectes inputs
     {
         xMoveInput = Input.GetAxisRaw("Horizontal");
 
@@ -200,10 +203,13 @@ public class UpdateManager : MonoBehaviour
     #endregion
 
     #region OnStartGame
-    private void InitializeGame() //set somethings at the start of the game
+
+    private void InitializeGame() //Sets variables to their default values at the beggining of the game level.
     {
         ballIsActive = false;
         ballsUsed = 0;
+        foreach (GameObject ball in livesCounter) { ball.SetActive(true); }
+
         paddle.transform.position = new Vector3(0f, paddle.transform.position.y, 0f);
 
         if (pool == null)
@@ -212,19 +218,21 @@ public class UpdateManager : MonoBehaviour
             pool.Initialize();
         }
     }
-    private void SetGameBoundaries() //calculates the cordinates of the game boundaries
+
+    private void SetGameBoundaries() //Calculates the coordinates of the game boundaries
     {
         rightLimit = rightWall.position.x - rightWall.lossyScale.x / 2;
         leftLimit = leftWall.position.x + leftWall.lossyScale.x / 2;
         topLimit = topWall.position.y - topWall.lossyScale.y / 2;
         bottomLimit = bottomWall.position.y + bottomWall.lossyScale.y / 2;
     }
-    private void SetPlayer()//Create the player paddle
+
+    private void SetPlayer() //Create the player paddle
     {
         player = new PlayerPaddle(paddle, paddleSpeed, leftLimit, rightLimit);
     }
 
-    private void SpawnBricks(float rowSeparation, float columnSeparation)
+    private void SpawnBricks(float rowSeparation, float columnSeparation) //Instantiates all the bricks.
     {
         brickGrid = new Brick[brickRows, brickColums];
 
@@ -245,33 +253,33 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
-
     #endregion
 
     #region Ball
-    public void LaunchBall() //causes the ball to start moving with a random direction upward
+
+    public void LaunchBall() //Causes the ball to start moving upward in a slight random angle.
     {
         Vector3 launchDirection = Vector3.zero;
 
-        float xDir = Random.Range(0.25f, 0.6f);
+        float xDir = Random.Range(0.25f, 0.6f); //Gets and angle in the range of the arc. 
 
-        if (Random.value < 0.5f)
+        if (Random.value < 0.5f) //Then based on a coin flip, it determines if it launches it to the left or to the right of the paddle. This is done to avoid right angles.
         {
             xDir *= -1;
         }
 
         launchDirection = new Vector3(xDir, 1, 0);
 
-        ballToLaunch.LauchBall(launchDirection);
+        ballToLaunch.LauchBall(launchDirection); //Once it gets the launch vector it tells the ball to start moving in that direction.
     }
 
-    public void GetBallToLaunch() //get a ball from the pool and set in the padel
+    public void GetBallToLaunch() //Get a ball from the pool and set in the paddel.
     {
         ballToLaunch = pool.GetBall();
         ballToLaunch.Initialize(ballSpawnPoint);
     }
 
-    public Ball SpawnBall() //Instantiates a new ball
+    public Ball SpawnBall() //Instantiates a new ball.
     {
         GameObject newBall = Instantiate(ballPrefab, ballSpawnPoint.position, Quaternion.identity);
         Ball ball = new Ball(newBall.transform, ballSpeed, leftLimit, rightLimit, topLimit, bottomLimit, player);
@@ -279,7 +287,7 @@ public class UpdateManager : MonoBehaviour
         return ball;
     }
 
-    public void OnBallDeath(Ball ball)//Gets called when a ball exits the screen
+    public void OnBallDeath(Ball ball) //Gets called when a ball exits the screen.
     {
         pool.ReturnBall(ball);
         if (pool.ballsInUse.Count == 0)
@@ -292,15 +300,17 @@ public class UpdateManager : MonoBehaviour
             }
         }
 
-        if (!ballIsActive && CurrentGameState == GameStates.Game)
+        if (!ballIsActive && CurrentGameState == GameStates.Game) //If there are no more balls active, then the player loses a life.
         {
+            livesCounter[ballsUsed].SetActive(false);
             ballsUsed++;
+            
             Debug.Log(ballsUsed);
             if (ballsUsed < ballLives) //If the player has remaining lives then a new ball spawns ready to be launched
             {
                 GetBallToLaunch();
             }
-            else // If the player runs out of lives then the game ends.
+            else //If the player runs out of lives then the game ends.
             {
                 ChangeGameState(GameStates.Lose);
             }
@@ -310,14 +320,14 @@ public class UpdateManager : MonoBehaviour
     #endregion
 
     #region Bricks & PowerUps
-    public GameObject SpawnPowerUp(Vector3 spawnPoint)
+    public GameObject SpawnPowerUp(Vector3 spawnPoint) //Instantiates the powerup object.
     {
         GameObject powerUp = Instantiate(multiballPrefab);
         powerUp.transform.position = spawnPoint;
         return powerUp;
     }
 
-    private Vector2[] SetPowerUpCoordinates(int rows, int colums)
+    private Vector2[] SetPowerUpCoordinates(int rows, int colums) //When setting up the bricks this method, choses a positions at random on where to hide the powerups.
     {
         Vector2[] coordinates = new Vector2[rows];
 
@@ -335,9 +345,12 @@ public class UpdateManager : MonoBehaviour
 
         for (int i = 0; i < rows; i++)
         {
-            Vector2 pwLocation = new Vector2(Random.Range(0, availableRows.Count), Random.Range(0, availableColums.Count));
-            availableRows.RemoveAt((int)pwLocation.x);
-            availableColums.RemoveAt((int)pwLocation.y);
+            int randX = Random.Range(0, availableRows.Count);
+            int randY = Random.Range(0, availableColums.Count);
+
+            Vector2 pwLocation = new Vector2(availableRows[randX], availableColums[randY]);
+            availableRows.RemoveAt(randX);
+            availableColums.RemoveAt(randY);
             coordinates[i] = pwLocation;
 
             Debug.Log(pwLocation);
@@ -358,9 +371,18 @@ public class UpdateManager : MonoBehaviour
 
                 brick.transform.gameObject.SetActive(true);
 
-                if (PowerUpCheck(powerUpsPos, i, j))
+                if (PowerUpCheck(powerUpsPos, i, j)) //If the current position is set to have a powerup, then the block recives a powerup to spawn on death.
                 {
-                    brick.SetPowerUp(Brick.PowerUpType.MultiBall);
+                    if (Random.value < 0.5f)
+                    {
+                        brick.SetPowerUp(Brick.PowerUpType.MultiBall);
+                        Debug.Log("Multi");
+                    }
+                    else
+                    {
+                        brick.SetPowerUp(Brick.PowerUpType.FastPaddle);
+                        Debug.Log("Speed");
+                    }
                 }
                 else
                 {
@@ -372,7 +394,7 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
-    private bool PowerUpCheck(Vector2[] powerUpsPos, int posX, int posY)
+    private bool PowerUpCheck(Vector2[] powerUpsPos, int posX, int posY) //Checks if the current brick should have a powerup.
     {
         for (int i = 0; i < powerUpsPos.Length; i++)
         {
@@ -396,6 +418,11 @@ public class UpdateManager : MonoBehaviour
         }
     }
 
+    public void ActivateSpeedPowerUp()
+    {
+        player.ToggleSpeedPowerUp(true);
+    }
+
     #endregion
 
     #region ChangeGameState
@@ -407,6 +434,14 @@ public class UpdateManager : MonoBehaviour
 
     private void StartGame()
     {
+        activeBricksList.Clear();
+        if (pool != null) { pool.ReturnAll(); }
+
+        for (int i = 0; i < powerUpList.Count; i++)
+        {
+            powerUpList[0].DestroyPowerUp();
+        }
+
         InitializeGame();
         InitializeBricks();
         GetBallToLaunch();
@@ -422,7 +457,7 @@ public class UpdateManager : MonoBehaviour
         Debug.Log("YOU LOSE");
     }
 
-    private void ChangeGameState(GameStates state)
+    private void ChangeGameState(GameStates state) //Used to switch between game states.
     {
         mainMenuScreen.SetActive(false);
         winScreen.SetActive(false);
@@ -451,6 +486,7 @@ public class UpdateManager : MonoBehaviour
     }
 
     #endregion
+
     public void DestroyGameObject(GameObject go)
     {
         Destroy(go);

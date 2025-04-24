@@ -45,7 +45,7 @@ public class PU_Multiball : GameEntity, IPowerUp
         }
     }
 
-    private void PaddleCollision(Transform paddle)
+    private void PaddleCollision(Transform paddle) //Checks if the power up collides with the paddle, and if so, it activates.
     {
         bool onSameX = false;
 
@@ -64,18 +64,16 @@ public class PU_Multiball : GameEntity, IPowerUp
         }
     }
 
-    public void PowerUpEffect()
+    public void PowerUpEffect() //Spawns two balls and immidiatly launches them.
     {
-        Debug.Log("MultiBall");
-
-        UpdateManager.Instance.GetBallToLaunch();
+        UpdateManager.Instance.GetBallToLaunch(); 
         UpdateManager.Instance.LaunchBall();
 
         UpdateManager.Instance.GetBallToLaunch();
         UpdateManager.Instance.LaunchBall();
     }
 
-    public void DestroyPowerUp()
+    public void DestroyPowerUp() //Despawn the powerup.
     {
         UpdateManager.Instance.powerUpList.Remove(this);
         UpdateManager.Instance.DestroyGameObject(transform.gameObject);

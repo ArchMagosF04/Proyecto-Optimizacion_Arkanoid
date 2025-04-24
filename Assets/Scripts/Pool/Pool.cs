@@ -6,15 +6,15 @@ public class Pool
 {
     private int startingSpawnAmount;
 
-    public Queue<Ball> ballsOnReserve = new Queue<Ball>();
-    public List<Ball> ballsInUse = new List<Ball>();
+    public Queue<Ball> ballsOnReserve = new Queue<Ball>(); //Contains the balls that are deactivated.
+    public List<Ball> ballsInUse = new List<Ball>(); //Contains the balls that are in use.
 
     public Pool(int startingSpawnAmount)
     {
         this.startingSpawnAmount = startingSpawnAmount;
     }
 
-    public void Initialize()
+    public void Initialize() //It will instantiate how many items are set in the startingSpawnAmount.
     {
         for (int i = 0; i < startingSpawnAmount; i++)
         {
@@ -22,7 +22,7 @@ public class Pool
         }
     }
 
-    public Ball CreateBall()
+    public Ball CreateBall() //Creates a new object.
     {
         Ball newBall = UpdateManager.Instance.SpawnBall();
         newBall.ToggleGameObject(false);
@@ -31,7 +31,7 @@ public class Pool
         return newBall;
     }
 
-    public Ball GetBall()
+    public Ball GetBall() //Gets a ball from the reserve queue, and if it's empty, then it creates a new one.
     {
         Ball ball;
 
@@ -48,7 +48,7 @@ public class Pool
         return ball;
     }
 
-    public void ReturnBall(Ball ball)
+    public void ReturnBall(Ball ball) //Puts a ball from the inUse list to the reserve.
     {
         if (ballsInUse.Contains(ball))
         {
@@ -58,7 +58,7 @@ public class Pool
         }
     }
 
-    public void ReturnAll()
+    public void ReturnAll() //Returns all activate balls to the reserve queue.
     {
         for(int i = 0; i < ballsInUse.Count; i++)
         {

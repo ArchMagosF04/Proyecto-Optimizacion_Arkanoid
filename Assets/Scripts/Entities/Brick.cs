@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class Brick : GameEntity
 {
-    public enum PowerUpType { None, MultiBall, FastPaddle}
+    #region Variables
 
+    public enum PowerUpType { None, MultiBall, FastPaddle} 
+
+    private PowerUpType heldPowerUp;
+
+    //Location of the brick's sides.
     public float topSide {  get; private set; }
     public float bottomSide { get; private set; }
     public float rightSide { get; private set; }
     public float leftSide { get; private set; }
 
-    //private bool heldPowerUp;
-
-    private PowerUpType heldPowerUp;
+    #endregion
 
     public Brick(Transform transform)
     {
@@ -25,13 +28,14 @@ public class Brick : GameEntity
         leftSide = transform.position.x - transform.lossyScale.x / 2;
     }
 
-    public void SetPowerUp(PowerUpType powerUp)
+    public void SetPowerUp(PowerUpType powerUp) //Called to select which power up the brick holds, or if it even has one.
     {
         heldPowerUp = powerUp;
     }
-    public void DestroyBrick()
+
+    public void DestroyBrick() //Executed when the ball collides with the brick.
     {
-        if (heldPowerUp != PowerUpType.None)
+        if (heldPowerUp != PowerUpType.None) //If it holds a powerup then spawn it.
         {
             GameObject newObject = UpdateManager.Instance.SpawnPowerUp(transform.position);
             IPowerUp newPU = null;
@@ -44,7 +48,7 @@ public class Brick : GameEntity
             {
                 newPU = new PU_FastPaddle(newObject.transform, 10, UpdateManager.Instance.bottomLimit);
             }
-            
+
             newPU.Activate(true);
             UpdateManager.Instance.powerUpList.Add(newPU);
         }

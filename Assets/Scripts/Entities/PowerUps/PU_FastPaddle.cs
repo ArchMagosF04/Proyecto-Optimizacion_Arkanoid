@@ -65,7 +65,7 @@ public class PU_FastPaddle : GameEntity, IPowerUp
 
     public void PowerUpEffect()
     {
-        Debug.Log("FastPaddle");
+        UpdateManager.Instance.ActivateSpeedPowerUp();
     }
 
     public void DestroyPowerUp()
