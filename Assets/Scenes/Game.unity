@@ -222,7 +222,6 @@ GameObject:
   - component: {fileID: 378849824}
   - component: {fileID: 378849827}
   - component: {fileID: 378849826}
-  - component: {fileID: 378849825}
   m_Layer: 0
   m_Name: Bottom
   m_TagString: Untagged
@@ -245,27 +244,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1371413170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &378849825
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 378849823}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &378849826
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -365,7 +343,6 @@ GameObject:
   - component: {fileID: 453448352}
   - component: {fileID: 453448355}
   - component: {fileID: 453448354}
-  - component: {fileID: 453448353}
   m_Layer: 0
   m_Name: BackGround
   m_TagString: Untagged
@@ -388,28 +365,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1371413170}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!64 &453448353
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 453448351}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &453448354
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -565,7 +520,6 @@ GameObject:
   - component: {fileID: 552376507}
   - component: {fileID: 552376510}
   - component: {fileID: 552376509}
-  - component: {fileID: 552376508}
   m_Layer: 0
   m_Name: WinScreen
   m_TagString: Untagged
@@ -588,28 +542,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 335645043}
   m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
---- !u!64 &552376508
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 552376506}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &552376509
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -851,7 +783,6 @@ GameObject:
   - component: {fileID: 865178510}
   - component: {fileID: 865178513}
   - component: {fileID: 865178512}
-  - component: {fileID: 865178511}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -874,28 +805,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 335645043}
   m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
---- !u!64 &865178511
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 865178509}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &865178512
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -991,7 +900,6 @@ GameObject:
   - component: {fileID: 937309640}
   - component: {fileID: 937309643}
   - component: {fileID: 937309642}
-  - component: {fileID: 937309641}
   m_Layer: 0
   m_Name: Left
   m_TagString: Untagged
@@ -1014,52 +922,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1371413170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &937309641
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937309639}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!23 &937309642
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1213,7 +1075,6 @@ GameObject:
   - component: {fileID: 1093548103}
   - component: {fileID: 1093548106}
   - component: {fileID: 1093548105}
-  - component: {fileID: 1093548104}
   m_Layer: 0
   m_Name: LoseScreen
   m_TagString: Untagged
@@ -1236,28 +1097,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 335645043}
   m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
---- !u!64 &1093548104
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093548102}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1093548105
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1321,7 +1160,6 @@ GameObject:
   - component: {fileID: 1170893463}
   - component: {fileID: 1170893466}
   - component: {fileID: 1170893465}
-  - component: {fileID: 1170893464}
   m_Layer: 0
   m_Name: Right
   m_TagString: Untagged
@@ -1344,52 +1182,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1371413170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1170893464
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170893462}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1.0000001}
-  m_EdgeRadius: 0
 --- !u!23 &1170893465
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1815,6 +1607,7 @@ MonoBehaviour:
   - {fileID: 1309313375}
   - {fileID: 1596525484}
   - {fileID: 676326499}
+  atlas: {fileID: 0}
   paddle: {fileID: 1012066985}
   ballSpawnPoint: {fileID: 1507641203}
   brickSpawnPoint: {fileID: 1655717116}
@@ -1856,7 +1649,6 @@ GameObject:
   - component: {fileID: 2056439266}
   - component: {fileID: 2056439269}
   - component: {fileID: 2056439268}
-  - component: {fileID: 2056439267}
   m_Layer: 0
   m_Name: Top
   m_TagString: Untagged
@@ -1879,52 +1671,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1371413170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2056439267
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056439265}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!23 &2056439268
 MeshRenderer:
   m_ObjectHideFlags: 0

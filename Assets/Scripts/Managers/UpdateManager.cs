@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 using Random = UnityEngine.Random;
 
 public class UpdateManager : MonoBehaviour
@@ -32,6 +33,8 @@ public class UpdateManager : MonoBehaviour
     [SerializeField] private GameObject loseScreen;
 
     [SerializeField] private GameObject[] livesCounter;
+
+    [SerializeField] private SpriteAtlas atlas;
 
     [Space(10)]
 
