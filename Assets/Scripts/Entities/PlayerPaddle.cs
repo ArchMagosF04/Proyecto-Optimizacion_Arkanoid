@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class PlayerPaddle : GameEntity
 {
@@ -15,12 +16,24 @@ public class PlayerPaddle : GameEntity
     private float multiplierDuration = 7f;
     private float multiplierTimer;
 
-    public PlayerPaddle(Transform transform, float speed, float leftLimit, float rightLimit)
+    private MeshRenderer meshRenderer;
+    private MaterialPropertyBlock materialPropertyBlock;
+
+    private Color baseColor;
+    private Color speedColor;
+
+    public PlayerPaddle(Transform transform, float speed, float leftLimit, float rightLimit, MaterialPropertyBlock propertyBlock, Color baseColor, Color speedColor)
     {
         this.transform = transform;
         this.speed = speed;
         this.screenLeftLimit = leftLimit;
         this.screenRightLimit = rightLimit;
+        materialPropertyBlock = propertyBlock;
+
+        meshRenderer = transform.GetComponent<MeshRenderer>();
+
+        this.baseColor = baseColor;
+        this.speedColor = speedColor;
     }
 
     public void Update(float deltaTime, float input)
@@ -44,17 +57,26 @@ public class PlayerPaddle : GameEntity
 
     public void ToggleSpeedPowerUp(bool value) //Activates/Deactivates the bonus speed received from the speed powerup.
     {
+        Color color = Color.white;
+
         if (value) 
         {
             isSpeedPowerUpActive = true;
             multiplier = extraSpeed;
             multiplierTimer = multiplierDuration;
+
+            color = speedColor;
         }
         else
         {
             isSpeedPowerUpActive = false;
             multiplier = 1f;
+            color = baseColor;
         }
+
+        meshRenderer.GetPropertyBlock(materialPropertyBlock);
+        materialPropertyBlock.SetColor("_Color", color);
+        meshRenderer.SetPropertyBlock(materialPropertyBlock);
     }
 
     public void SpeedMultiplerTimer(float deltaTime) //Countdown of the speed powerup effect.

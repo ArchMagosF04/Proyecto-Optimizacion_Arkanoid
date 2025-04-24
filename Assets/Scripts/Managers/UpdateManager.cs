@@ -1,15 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.U2D;
+using Color = UnityEngine.Color;
 using Random = UnityEngine.Random;
 
 public class UpdateManager : MonoBehaviour
 {
     #region Variables
 
-    public static UpdateManager Instance; //instance of Manager that can be called from other scrits
+    public static UpdateManager Instance; //Instance of the Manager that can be called from other scripts.
 
     public enum GameStates { MainMenu, Game, Win, Lose }
     public GameStates CurrentGameState = GameStates.MainMenu;
@@ -25,6 +27,7 @@ public class UpdateManager : MonoBehaviour
     [SerializeField] private Transform leftWall;
     [SerializeField] private Transform topWall;
     [SerializeField] private Transform bottomWall;
+    [SerializeField] private Transform backgroundWall;
 
     [Space(10)]
     //Game UI
@@ -34,15 +37,17 @@ public class UpdateManager : MonoBehaviour
 
     [SerializeField] private GameObject[] livesCounter;
 
-    [SerializeField] private SpriteAtlas atlas;
-
     [Space(10)]
 
     [SerializeField] private Transform paddle;
     [SerializeField] private Transform ballSpawnPoint;
     [SerializeField] private Transform brickSpawnPoint;
 
-    [SerializeField] private Material[] brickColors;
+    [Header("Colors")]
+    [SerializeField] private Color paddleColor;
+    [SerializeField] private Color paddleSpeedColor;
+    [SerializeField] private Color wallsColor;
+    [SerializeField] private Color ballColor;
     
     [Header("Game Variables")]
     [SerializeField] private float paddleSpeed = 10f;
@@ -79,6 +84,7 @@ public class UpdateManager : MonoBehaviour
 
     //Other
     private float deltaTime;
+    private MaterialPropertyBlock propertyBlock;
 
     #endregion
 
@@ -93,6 +99,8 @@ public class UpdateManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        propertyBlock = new MaterialPropertyBlock();
 
         ChangeGameState(GameStates.MainMenu); //The game starts in the main menu state.
 
@@ -127,7 +135,7 @@ public class UpdateManager : MonoBehaviour
 
         yield return null;
 
-        StartCoroutine(OnUpdate()); //At the end the coroutne calls itself again to continue the update loop.
+        StartCoroutine(OnUpdate()); //At the end the coroutine calls itself again to continue the update loop.
     }
 
     private void MenuUpdate() 
@@ -224,15 +232,42 @@ public class UpdateManager : MonoBehaviour
 
     private void SetGameBoundaries() //Calculates the coordinates of the game boundaries
     {
+        Transform[] wallMeshes = new Transform[4];
+
         rightLimit = rightWall.position.x - rightWall.lossyScale.x / 2;
+        wallMeshes[0] = rightWall;
+
         leftLimit = leftWall.position.x + leftWall.lossyScale.x / 2;
+        wallMeshes[1] = leftWall;
+
         topLimit = topWall.position.y - topWall.lossyScale.y / 2;
+        wallMeshes[2] = topWall;
+
         bottomLimit = bottomWall.position.y + bottomWall.lossyScale.y / 2;
+        wallMeshes[3] = bottomWall;
+
+        for (int i = 0; i < wallMeshes.Length; i++)
+        {
+            MeshRenderer mesh = wallMeshes[i].GetComponent<MeshRenderer>();
+            mesh.GetPropertyBlock(propertyBlock);
+            propertyBlock.SetColor("_Color", wallsColor);
+            mesh.SetPropertyBlock(propertyBlock);
+        }
+
+        MeshRenderer backMesh = backgroundWall.GetComponent<MeshRenderer>();
+        backMesh.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetColor("_Color", Color.black);
+        backMesh.SetPropertyBlock(propertyBlock);
     }
 
     private void SetPlayer() //Create the player paddle
     {
-        player = new PlayerPaddle(paddle, paddleSpeed, leftLimit, rightLimit);
+        player = new PlayerPaddle(paddle, paddleSpeed, leftLimit, rightLimit, propertyBlock, paddleColor, paddleSpeedColor);
+
+        MeshRenderer mesh = paddle.GetComponent<MeshRenderer>();
+        mesh.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetColor("_Color", paddleColor);
+        mesh.SetPropertyBlock(propertyBlock);
     }
 
     private void SpawnBricks(float rowSeparation, float columnSeparation) //Instantiates all the bricks.
@@ -246,10 +281,7 @@ public class UpdateManager : MonoBehaviour
                 GameObject newBrick = Instantiate(brickPrefab, brickSpawnPoint.position, Quaternion.identity);
                 newBrick.transform.position += new Vector3(columnSeparation * j, -rowSeparation * i, 0);
 
-                MeshRenderer mesh = newBrick.GetComponent<MeshRenderer>();
-                mesh.material = brickColors[j];
-
-                Brick brick = new Brick(newBrick.transform);
+                Brick brick = new Brick(newBrick.transform, propertyBlock);
 
                 brickGrid[i, j] = brick;
             }
@@ -287,6 +319,11 @@ public class UpdateManager : MonoBehaviour
         GameObject newBall = Instantiate(ballPrefab, ballSpawnPoint.position, Quaternion.identity);
         Ball ball = new Ball(newBall.transform, ballSpeed, leftLimit, rightLimit, topLimit, bottomLimit, player);
 
+        MeshRenderer mesh = newBall.GetComponent<MeshRenderer>();
+        mesh.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetColor("_Color", ballColor);
+        mesh.SetPropertyBlock(propertyBlock);
+
         return ball;
     }
 
@@ -308,7 +345,7 @@ public class UpdateManager : MonoBehaviour
             livesCounter[ballsUsed].SetActive(false);
             ballsUsed++;
             
-            Debug.Log(ballsUsed);
+            //Debug.Log(ballsUsed);
             if (ballsUsed < ballLives) //If the player has remaining lives then a new ball spawns ready to be launched
             {
                 GetBallToLaunch();
@@ -356,7 +393,7 @@ public class UpdateManager : MonoBehaviour
             availableColums.RemoveAt(randY);
             coordinates[i] = pwLocation;
 
-            Debug.Log(pwLocation);
+            //Debug.Log(pwLocation);
         }
 
         return coordinates;
@@ -368,23 +405,34 @@ public class UpdateManager : MonoBehaviour
 
         for (int i = 0; i < brickRows; i++)
         {
+            float r = Random.Range(0f, 256) / 255f;
+            float g = Random.Range(0f, 256) / 255f;
+            float b = Random.Range(0f, 256) / 255f;
+
             for (int j = 0; j < brickColums; j++)
             {
                 Brick brick = brickGrid[i,j];
 
                 brick.transform.gameObject.SetActive(true);
 
+                Color color = new Color(r, g, b);
+
+                MeshRenderer mesh = brick.transform.GetComponent<MeshRenderer>();
+                mesh.GetPropertyBlock(propertyBlock);
+                propertyBlock.SetColor("_Color", color);
+                mesh.SetPropertyBlock(propertyBlock);
+
                 if (PowerUpCheck(powerUpsPos, i, j)) //If the current position is set to have a powerup, then the block recives a powerup to spawn on death.
                 {
                     if (Random.value < 0.5f)
                     {
                         brick.SetPowerUp(Brick.PowerUpType.MultiBall);
-                        Debug.Log("Multi");
+                        //Debug.Log("Multi");
                     }
                     else
                     {
                         brick.SetPowerUp(Brick.PowerUpType.FastPaddle);
-                        Debug.Log("Speed");
+                        //Debug.Log("Speed");
                     }
                 }
                 else
@@ -430,11 +478,6 @@ public class UpdateManager : MonoBehaviour
 
     #region ChangeGameState
 
-    private void GoToMenu()
-    {
-
-    }
-
     private void StartGame()
     {
         activeBricksList.Clear();
@@ -453,11 +496,7 @@ public class UpdateManager : MonoBehaviour
     {
         pool.ReturnAll();
 
-        Debug.Log("YOU WIN");
-    }
-    private void LoseGame()
-    {
-        Debug.Log("YOU LOSE");
+        //Debug.Log("YOU WIN");
     }
 
     private void ChangeGameState(GameStates state) //Used to switch between game states.
@@ -472,7 +511,6 @@ public class UpdateManager : MonoBehaviour
         {
             case GameStates.MainMenu:
                 mainMenuScreen.SetActive(true);
-                GoToMenu();
                 break;
             case GameStates.Game:
                 StartGame();
@@ -483,7 +521,6 @@ public class UpdateManager : MonoBehaviour
                 break;
             case GameStates.Lose:
                 loseScreen.SetActive(true);
-                LoseGame();
                 break;
         }
     }

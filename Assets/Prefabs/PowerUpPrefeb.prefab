@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8268926889129529615}
   - component: {fileID: 2362705638477997752}
   m_Layer: 0
-  m_Name: PU_MultiBall
+  m_Name: PowerUpPrefeb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a1e2f6d72e3023c4e9c8ca7c9befbdbc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
