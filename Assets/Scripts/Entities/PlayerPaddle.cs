@@ -24,7 +24,7 @@ public class PlayerPaddle : GameEntity
 
     public PlayerPaddle(Transform transform, float speed, float leftLimit, float rightLimit, MaterialPropertyBlock propertyBlock, Color baseColor, Color speedColor)
     {
-        this.transform = transform;
+        this.Transform = transform;
         this.speed = speed;
         this.screenLeftLimit = leftLimit;
         this.screenRightLimit = rightLimit;
@@ -34,6 +34,8 @@ public class PlayerPaddle : GameEntity
 
         this.baseColor = baseColor;
         this.speedColor = speedColor;
+
+        Dimensions = new Vector2(transform.lossyScale.x / 2, transform.lossyScale.y / 2);
     }
 
     public void Update(float deltaTime, float input)
@@ -47,12 +49,12 @@ public class PlayerPaddle : GameEntity
     {
         direction.x = input;
 
-        if ((direction.x > 0 && transform.position.x + transform.lossyScale.x / 2 >= screenRightLimit) || (direction.x < 0 && transform.position.x - transform.lossyScale.x / 2 <= screenLeftLimit))
+        if ((direction.x > 0 && Transform.position.x + Transform.lossyScale.x / 2 >= screenRightLimit) || (direction.x < 0 && Transform.position.x - Transform.lossyScale.x / 2 <= screenLeftLimit))
         {
             direction.x = 0f;
         }
 
-        transform.position += direction * (speed * multiplier * deltaTime);
+        Transform.position += direction * (speed * multiplier * deltaTime);
     }
 
     public void ToggleSpeedPowerUp(bool value) //Activates/Deactivates the bonus speed received from the speed powerup.

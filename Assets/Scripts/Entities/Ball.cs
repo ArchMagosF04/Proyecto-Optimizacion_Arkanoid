@@ -17,8 +17,6 @@ public class Ball : GameEntity
 
     private PlayerPaddle playerPaddle;
 
-    private float radius;
-
     private float hitBufferLength = 0.1f;
     private float hitBufferTimer;
 
@@ -26,7 +24,7 @@ public class Ball : GameEntity
 
     public Ball(Transform transform, float speed, float leftLimit, float rightLimit, float topLimit, float bottomLimit, PlayerPaddle player) 
     {
-        this.transform = transform;
+        this.Transform = transform;
         this.speed = speed;
         this.leftLimit = leftLimit;
         this.rightLimit = rightLimit;
@@ -36,13 +34,14 @@ public class Ball : GameEntity
 
         isLaunched = false;
         isActive = false;
-        radius = transform.lossyScale.x / 2;
+        Dimensions = new Vector2(transform.lossyScale.x / 2, transform.lossyScale.y / 2);
     }
 
     public void Initialize(Transform spawn)
     {
         isLaunched = false;
-        transform.position = spawn.position;
+        Transform.position = spawn.position;
+        Transform.parent = spawn.parent;
     }
 
     public void Update(float deltaTime, List<Brick> bricks)
@@ -51,7 +50,7 @@ public class Ball : GameEntity
 
         if (isLaunched)
         {
-            Vector3 nextPosition = transform.position;
+            Vector3 nextPosition = Transform.position;
             nextPosition += direction * (speed * deltaTime);
 
             BoundariesCollision(deltaTime, nextPosition);
@@ -72,11 +71,7 @@ public class Ball : GameEntity
     {
         if (isLaunched)
         {
-            transform.position += direction * (speed * deltaTime);
-        }
-        else //If the ball has not been launched then it follows the position of the paddle.
-        {
-            transform.position = new Vector3(playerPaddle.transform.position.x, transform.position.y, transform.position.z);
+            Transform.position += direction * (speed * deltaTime);
         }
     }
 
@@ -84,6 +79,7 @@ public class Ball : GameEntity
     {
         if (!isLaunched)
         {
+            Transform.parent = null;
             this.direction = direction;
             isLaunched = true;
         }
@@ -95,15 +91,15 @@ public class Ball : GameEntity
 
     private void BoundariesCollision(float deltaTime, Vector3 nextPosition) //Detects collision with the game walls.
     {
-        if (nextPosition.x + radius >= rightLimit || nextPosition.x - radius <= leftLimit)
+        if (nextPosition.x + Dimensions.x >= rightLimit || nextPosition.x - Dimensions.x <= leftLimit)
         {
             direction.x *= -1;
         }
-        if (nextPosition.y + radius >= topLimit)
+        if (nextPosition.y + Dimensions.y >= topLimit)
         {
             direction.y *= -1;
         }
-        if (transform.position.y - radius <= bottomLimit)
+        if (Transform.position.y - Dimensions.y <= bottomLimit)
         {
             OnBallLost();
         }
@@ -122,20 +118,20 @@ public class Ball : GameEntity
     {
         bool onSameX = false;
 
-        float topSide = playerPaddle.transform.position.y + playerPaddle.transform.lossyScale.y / 2;
-        float bottomSide = playerPaddle.transform.position.y - playerPaddle.transform.lossyScale.y / 2;
-        float rightSide = playerPaddle.transform.position.x + playerPaddle.transform.lossyScale.x / 2;
-        float leftSide = playerPaddle.transform.position.x - playerPaddle.transform.lossyScale.x / 2;
+        float topSide = playerPaddle.Transform.position.y + playerPaddle.Dimensions.y;
+        float bottomSide = playerPaddle.Transform.position.y - playerPaddle.Dimensions.y;
+        float rightSide = playerPaddle.Transform.position.x + playerPaddle.Dimensions.x;
+        float leftSide = playerPaddle.Transform.position.x - playerPaddle.Dimensions.x;
 
-        if (nextPosition.x + radius > leftSide && nextPosition.x - radius < rightSide) { onSameX = true; }
+        if (nextPosition.x + Dimensions.x > leftSide && nextPosition.x - Dimensions.x < rightSide) { onSameX = true; }
 
-        if (onSameX && nextPosition.y - radius <= topSide && nextPosition.y >= bottomSide)
+        if (onSameX && nextPosition.y - Dimensions.y <= topSide && nextPosition.y >= bottomSide)
         {
             direction.y *= -1;
 
-            float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.transform.position.x); //Depending on how far away from the center of the paddle the ball hits then it will be launched more in that direction.
+            float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.Transform.position.x); //Depending on how far away from the center of the paddle the ball hits then it will be launched more in that direction.
             float horizontalAngle = (distanceFromCenter / 1.5f) * 0.6f;
-            if (nextPosition.x < playerPaddle.transform.position.x)
+            if (nextPosition.x < playerPaddle.Transform.position.x)
             {
                 horizontalAngle *= -1;
             }
@@ -159,7 +155,7 @@ public class Ball : GameEntity
 
                 if (nextPosition.y > bricks[i].bottomSide && nextPosition.y < bricks[i].topSide) { onSameY = true; }
 
-                if (onSameX && (nextPosition.y - radius <= bricks[i].topSide && nextPosition.y + radius >= bricks[i].bottomSide))
+                if (onSameX && (nextPosition.y - Dimensions.y <= bricks[i].topSide && nextPosition.y + Dimensions.y >= bricks[i].bottomSide))
                 {
                     direction.y *= -1;
                     bricks[i].DestroyBrick();
@@ -167,7 +163,7 @@ public class Ball : GameEntity
                     return;
                 }
 
-                if (onSameY && (nextPosition.x + radius >= bricks[i].leftSide && nextPosition.x - radius <= bricks[i].rightSide))
+                if (onSameY && (nextPosition.x + Dimensions.x >= bricks[i].leftSide && nextPosition.x - Dimensions.x <= bricks[i].rightSide))
                 {
                     direction.x *= -1;
                     bricks[i].DestroyBrick();
@@ -189,6 +185,6 @@ public class Ball : GameEntity
 
     public void ToggleGameObject(bool input)
     {
-        transform.gameObject.SetActive(input);
+        Transform.gameObject.SetActive(input);
     }
 }

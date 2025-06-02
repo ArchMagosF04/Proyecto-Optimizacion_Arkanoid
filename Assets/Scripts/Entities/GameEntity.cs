@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class GameEntity 
 {
-    public Transform transform {  get; protected set; }
+    public Transform Transform { get; protected set; }
+    public Vector2 Dimensions { get; protected set; }
 
     protected Vector3 direction;
 

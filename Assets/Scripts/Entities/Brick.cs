@@ -7,9 +7,7 @@ public class Brick : GameEntity
 {
     #region Variables
 
-    public enum PowerUpType { None, MultiBall, FastPaddle} 
-
-    private PowerUpType heldPowerUp;
+    private int hitPoints;
 
     //Location of the brick's sides.
     public float topSide {  get; private set; }
@@ -23,7 +21,7 @@ public class Brick : GameEntity
 
     public Brick(Transform transform, MaterialPropertyBlock propertyBlock)
     {
-       this.transform = transform;
+       this.Transform = transform;
 
         topSide = transform.position.y + transform.lossyScale.y / 2;
         bottomSide = transform.position.y - transform.lossyScale.y / 2;
@@ -33,41 +31,18 @@ public class Brick : GameEntity
         this.propertyBlock = propertyBlock;
     }
 
-    public void SetPowerUp(PowerUpType powerUp) //Called to select which power up the brick holds, or if it even has one.
+    public void BrickHit() //Executed when the ball collides with the brick.
     {
-        heldPowerUp = powerUp;
+        hitPoints--;
+
+        if (hitPoints <= 0)
+        {
+            DestroyBrick();
+        }
     }
 
-    public void DestroyBrick() //Executed when the ball collides with the brick.
+    public void DestroyBrick() 
     {
-        if (heldPowerUp != PowerUpType.None) //If it holds a powerup then spawn it.
-        {
-            GameObject newObject = UpdateManager.Instance.SpawnPowerUp(transform.position);
-            IPowerUp newPU = null;
 
-            Color color = Color.black;
-
-            if (heldPowerUp == PowerUpType.MultiBall)
-            {
-                newPU = new PU_Multiball(newObject.transform, 10, UpdateManager.Instance.bottomLimit);
-                color = Color.white;
-            }
-            else if (heldPowerUp == PowerUpType.FastPaddle)
-            {
-                newPU = new PU_FastPaddle(newObject.transform, 10, UpdateManager.Instance.bottomLimit);
-                color = Color.yellow;
-            }
-
-
-            MeshRenderer mesh = newObject.GetComponent<MeshRenderer>();
-            mesh.GetPropertyBlock(propertyBlock);
-            propertyBlock.SetColor("_Color", color);
-            mesh.SetPropertyBlock(propertyBlock);
-
-            newPU.Activate(true);
-            UpdateManager.Instance.powerUpList.Add(newPU);
-        }
-
-        UpdateManager.Instance.OnBrickDestruction(this);
     }
 }

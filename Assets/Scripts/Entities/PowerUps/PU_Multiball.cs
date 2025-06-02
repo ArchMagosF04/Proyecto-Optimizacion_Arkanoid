@@ -11,7 +11,7 @@ public class PU_Multiball : GameEntity, IPowerUp
 
     public PU_Multiball(Transform transform, float speed, float bottomLimit)
     {
-        this.transform = transform;
+        this.Transform = transform;
         this.speed = speed;
         this.bottomLimit = bottomLimit;
         isActive = true;
@@ -34,12 +34,12 @@ public class PU_Multiball : GameEntity, IPowerUp
 
     private void Move(float deltaTime)
     {
-        transform.position += direction * (speed * deltaTime);
+        Transform.position += direction * (speed * deltaTime);
     }
 
     private void PowerUpLost()
     {
-        if (transform.position.y - transform.lossyScale.y / 2 <= bottomLimit)
+        if (Transform.position.y - Transform.lossyScale.y / 2 <= bottomLimit)
         {
             DestroyPowerUp();
         }
@@ -54,9 +54,9 @@ public class PU_Multiball : GameEntity, IPowerUp
         float rightSide = paddle.position.x + paddle.lossyScale.x / 2;
         float leftSide = paddle.position.x - paddle.transform.lossyScale.x / 2;
 
-        if (transform.position.x + transform.lossyScale.x / 2 > leftSide && transform.position.x - transform.lossyScale.x / 2 < rightSide) { onSameX = true; }
+        if (Transform.position.x + Transform.lossyScale.x / 2 > leftSide && Transform.position.x - Transform.lossyScale.x / 2 < rightSide) { onSameX = true; }
 
-        if (onSameX && transform.position.y - transform.lossyScale.y / 2 <= topSide && transform.position.y >= bottomSide)
+        if (onSameX && Transform.position.y - Transform.lossyScale.y / 2 <= topSide && Transform.position.y >= bottomSide)
         {
             PowerUpEffect();
             DestroyPowerUp();
@@ -76,7 +76,7 @@ public class PU_Multiball : GameEntity, IPowerUp
     public void DestroyPowerUp() //Despawn the powerup.
     {
         UpdateManager.Instance.powerUpList.Remove(this);
-        UpdateManager.Instance.DestroyGameObject(transform.gameObject);
+        UpdateManager.Instance.DestroyGameObject(Transform.gameObject);
         isActive = false;
     }
 }

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0adcdb2d10924d14a82f4d8ed8a19805, type: 3}
+  m_Name: GameSettings
+  m_EditorClassIdentifier: 
+  maxLives: 5
+  paddleSpeed: 10
+  ballPrefab: {fileID: 3409378983391703240, guid: cfb6e8d2a6afbba44a76a8e47891d7f8, type: 3}
+  ballSpeed: 15
+  brickPrefab: {fileID: 5989048275203087895, guid: 7157ecf1842801e45b084967173efd0d, type: 3}
+  brickStats:
+  - Type: Glass
+    hitPoints: 1
+    blockMaterial: {fileID: 2100000, guid: 5291efc549806694292d0ece9c3f33d3, type: 2}
+  - Type: Wood
+    hitPoints: 2
+    blockMaterial: {fileID: 2100000, guid: e29d13f76cc0c4e45a5a51863f1b081d, type: 2}
+  - Type: Stone
+    hitPoints: 3
+    blockMaterial: {fileID: 2100000, guid: 11cb86c6602ffe147a50bc66a3c4245a, type: 2}
+  - Type: Metal
+    hitPoints: 4
+    blockMaterial: {fileID: 2100000, guid: b95a19f039fdea64aac97580e91721d2, type: 2}
+  powerUpPrefab: {fileID: 6911695989942344810, guid: 1dfb10dc25c93c0419ebe412ee24ec11, type: 3}
