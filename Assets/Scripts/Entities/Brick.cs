@@ -8,6 +8,7 @@ public class Brick : GameEntity
     #region Variables
 
     private int hitPoints;
+    private MeshRenderer mesh;
 
     //Location of the brick's sides.
     public float topSide {  get; private set; }
@@ -15,20 +16,22 @@ public class Brick : GameEntity
     public float rightSide { get; private set; }
     public float leftSide { get; private set; }
 
-    private MaterialPropertyBlock propertyBlock;
-
     #endregion
 
-    public Brick(Transform transform, MaterialPropertyBlock propertyBlock)
+    public Brick(Transform transform)
     {
        this.Transform = transform;
 
-        topSide = transform.position.y + transform.lossyScale.y / 2;
-        bottomSide = transform.position.y - transform.lossyScale.y / 2;
-        rightSide = transform.position.x + transform.lossyScale.x / 2;
-        leftSide = transform.position.x - transform.lossyScale.x / 2;
+        //CalculateBrickSidesPositions();
 
-        this.propertyBlock = propertyBlock;
+        mesh = transform.GetComponent<MeshRenderer>();
+    }
+
+    public void SetBrickType(int hp, Material material)
+    {
+        hitPoints = hp;
+        mesh.material = material;
+        CalculateBrickSidesPositions();
     }
 
     public void BrickHit() //Executed when the ball collides with the brick.
@@ -43,6 +46,19 @@ public class Brick : GameEntity
 
     public void DestroyBrick() 
     {
+        UpdateManager.Instance.OnBrickDeath(this);
+    }
 
+    private void CalculateBrickSidesPositions()
+    {
+        topSide = Transform.position.y + Transform.lossyScale.y / 2;
+        bottomSide = Transform.position.y - Transform.lossyScale.y / 2;
+        rightSide = Transform.position.x + Transform.lossyScale.x / 2;
+        leftSide = Transform.position.x - Transform.lossyScale.x / 2;
+    }
+
+    public void ToggleGameObject(bool input)
+    {
+        Transform.gameObject.SetActive(input);
     }
 }

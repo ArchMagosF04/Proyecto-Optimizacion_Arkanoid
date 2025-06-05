@@ -13,7 +13,6 @@ public class SO_GameSettings : ScriptableObject
     [field: SerializeField] public float paddleSpeed;
 
 
-
     [Header("Ball Settings")]
     [field: SerializeField] public GameObject ballPrefab;
     [field: SerializeField] public float ballSpeed;
@@ -24,6 +23,6 @@ public class SO_GameSettings : ScriptableObject
     [field: SerializeField] public BrickStats[] brickStats;
 
 
-    [Header("Multiball Settings")]
+    [Header("PowerUp Settings")]
     [field: SerializeField] public GameObject powerUpPrefab;
 }

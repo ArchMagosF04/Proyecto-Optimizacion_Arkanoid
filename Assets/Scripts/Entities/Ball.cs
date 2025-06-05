@@ -127,6 +127,7 @@ public class Ball : GameEntity
 
         if (onSameX && nextPosition.y - Dimensions.y <= topSide && nextPosition.y >= bottomSide)
         {
+            UpdateManager.Instance.IncreasePaddleHits();
             direction.y *= -1;
 
             float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.Transform.position.x); //Depending on how far away from the center of the paddle the ball hits then it will be launched more in that direction.
@@ -158,7 +159,7 @@ public class Ball : GameEntity
                 if (onSameX && (nextPosition.y - Dimensions.y <= bricks[i].topSide && nextPosition.y + Dimensions.y >= bricks[i].bottomSide))
                 {
                     direction.y *= -1;
-                    bricks[i].DestroyBrick();
+                    bricks[i].BrickHit();
                     hitBufferTimer = hitBufferLength;
                     return;
                 }
@@ -166,7 +167,7 @@ public class Ball : GameEntity
                 if (onSameY && (nextPosition.x + Dimensions.x >= bricks[i].leftSide && nextPosition.x - Dimensions.x <= bricks[i].rightSide))
                 {
                     direction.x *= -1;
-                    bricks[i].DestroyBrick();
+                    bricks[i].BrickHit();
                     hitBufferTimer = hitBufferLength;
                 }
 
@@ -175,7 +176,6 @@ public class Ball : GameEntity
     }
 
     #endregion
-
 
     private void OnBallLost()
     {
@@ -186,5 +186,6 @@ public class Ball : GameEntity
     public void ToggleGameObject(bool input)
     {
         Transform.gameObject.SetActive(input);
+        isActive = input;
     }
 }

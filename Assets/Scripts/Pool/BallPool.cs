@@ -2,20 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pool
+public class BallPool
 {
     private int startingSpawnAmount;
 
     public Queue<Ball> ballsOnReserve = new Queue<Ball>(); //Contains the balls that are deactivated.
     public List<Ball> ballsInUse = new List<Ball>(); //Contains the balls that are in use.
 
-    public Pool(int startingSpawnAmount)
+    public BallPool(int startingSpawnAmount)
     {
         this.startingSpawnAmount = startingSpawnAmount;
+        Initialize();
     }
 
     public void Initialize() //It will instantiate how many items are set in the startingSpawnAmount.
     {
+        if (startingSpawnAmount <= 0) return;
         for (int i = 0; i < startingSpawnAmount; i++)
         {
             CreateBall();
@@ -37,7 +39,7 @@ public class Pool
 
         if (ballsOnReserve.Count > 0)
         {
-            ball = ballsOnReserve.Dequeue(); 
+            ball = ballsOnReserve.Dequeue();
         }
         else
         {

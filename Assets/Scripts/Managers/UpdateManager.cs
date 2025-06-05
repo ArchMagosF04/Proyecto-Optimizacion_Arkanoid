@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.U2D;
 using Color = UnityEngine.Color;
 using Random = UnityEngine.Random;
 
@@ -28,18 +26,12 @@ public class UpdateManager : MonoBehaviour
 
     [SerializeField] private Transform paddle;
     [SerializeField] private Transform ballSpawnPoint;
-    [SerializeField] private Transform brickGOParent;
 
     [Header("Colors")]
     [SerializeField] private Color paddleColor;
     [SerializeField] private Color paddleSpeedColor;
     [SerializeField] private Color wallsColor;
     [SerializeField] private Color ballColor;
-
-    [Space(10)]
-
-    [SerializeField, Range(1, 6)] private int brickRows = 4;
-    private int brickColums = 7;
 
     [Header("Debug")]
     [SerializeField] private bool brickGridGizmos;
@@ -56,19 +48,22 @@ public class UpdateManager : MonoBehaviour
     //Class references
     private PlayerPaddle player;
     private Ball ballToLaunch;
-    private Pool pool;
-    private List<Brick> brickList = new List<Brick>();
+    private BallPool ballPool;
+    private BrickPool brickPool;
     public List<IPowerUp> powerUpList = new List<IPowerUp>();
 
     //Game Status
     private bool ballIsActive;
     private int currentLives;
+    private int paddleHits;
 
     //Other
     private float deltaTime;
     private MaterialPropertyBlock propertyBlock;
 
     #endregion
+
+    #region Core Functions
 
     private void Awake()
     {
@@ -86,14 +81,12 @@ public class UpdateManager : MonoBehaviour
 
         SetGameBoundaries();
         SetPlayer();
-        SetUpBricks();
-        //SpawnBricks(1.2f, 3.2f);
         StartGame();
+        SpawnBricks();
 
         StartCoroutine(OnUpdate()); //When the awake is done it begins the game loop that replaces Unity Update.
     }
-
-    #region Update
+    
 
     private IEnumerator OnUpdate() //Calls a different method depending on the current game state.
     {
@@ -112,9 +105,9 @@ public class UpdateManager : MonoBehaviour
 
         player.Update(deltaTime, xMoveInput); //Updates the player, and sends it the movement input so it knows when to move.
 
-        for (int i = 0; i < pool.ballsInUse.Count; i++) //Updates all the balls that are in an active state from the pool.
+        for (int i = 0; i < ballPool.ballsInUse.Count; i++) //Updates all the balls that are in an active state from the pool.
         {
-            //pool.ballsInUse[i].Update(deltaTime, activeBricksList);
+            ballPool.ballsInUse[i].Update(deltaTime, brickPool.bricksInUse);
         }
 
         for (int i = 0; i < powerUpList.Count; i++) //Updates all active powerup items.
@@ -138,17 +131,40 @@ public class UpdateManager : MonoBehaviour
 
     #region OnStartGame
 
+    private void StartGame()
+    {
+        if (ballPool != null) ballPool.ReturnAll();
+
+        if (brickPool != null) brickPool.ReturnAll();
+
+        for (int i = 0; i < powerUpList.Count; i++)
+        {
+            powerUpList[0].DestroyPowerUp();
+        }
+
+        InitializeGame();
+        GetBallToLaunch();
+    }
+
     private void InitializeGame() //Sets variables to their default values at the beggining of the game level.
     {
         ballIsActive = false;
         currentLives = gameSettings.maxLives;
+        paddleHits = 0;
+
+        UIManager.Instance.UpdateLives(currentLives);
+        UIManager.Instance.UpdatePaddleHits(paddleHits);
+        UIManager.Instance.UpdateBrickAmount(spawnData.spawnList.Length);
 
         paddle.transform.position = new Vector3(0f, paddle.transform.position.y, 0f);
 
-        if (pool == null)
+        if (ballPool == null)
         {
-            pool = new Pool(5);
-            pool.Initialize();
+            ballPool = new BallPool(5);
+        }
+        if (brickPool == null)
+        {
+            brickPool = new BrickPool(spawnData.spawnList.Length);
         }
     }
 
@@ -192,28 +208,18 @@ public class UpdateManager : MonoBehaviour
         mesh.SetPropertyBlock(propertyBlock);
     }
 
-    private void SetUpBricks()
+    private void SpawnBricks()
     {
+        foreach (BrickSpawn spawn in spawnData.spawnList)
+        {
+            Brick newBrick = brickPool.GetBrick();
+            newBrick.Transform.position = spawn.SpawnPoint;
 
+            BrickStats stats = gameSettings.brickStats[(int)spawn.Type];
+
+            newBrick.SetBrickType(stats.hitPoints, stats.blockMaterial);
+        }
     }
-
-    //private void SpawnBricks(float rowSeparation, float columnSeparation) //Instantiates all the bricks.
-    //{
-    //    brickGrid = new Brick[brickRows, brickColums];
-
-    //    for (int i = 0; i < brickRows; i++)
-    //    {
-    //        for (int j = 0; j < brickColums; j++)
-    //        {
-    //            GameObject newBrick = Instantiate(gameSettings.brickPrefab, brickSpawnPoint.position, Quaternion.identity);
-    //            newBrick.transform.position += new Vector3(columnSeparation * j, -rowSeparation * i, 0);
-
-    //            Brick brick = new Brick(newBrick.transform, propertyBlock);
-
-    //            brickGrid[i, j] = brick;
-    //        }
-    //    }
-    //}
 
     #endregion
 
@@ -237,7 +243,7 @@ public class UpdateManager : MonoBehaviour
 
     public void GetBallToLaunch() //Get a ball from the pool and set in the paddel.
     {
-        ballToLaunch = pool.GetBall();
+        ballToLaunch = ballPool.GetBall();
         ballToLaunch.Initialize(ballSpawnPoint);
     }
 
@@ -256,8 +262,8 @@ public class UpdateManager : MonoBehaviour
 
     public void OnBallDeath(Ball ball) //Gets called when a ball exits the screen.
     {
-        pool.ReturnBall(ball);
-        if (pool.ballsInUse.Count == 0)
+        ballPool.ReturnBall(ball);
+        if (ballPool.ballsInUse.Count == 0)
         {
             ballIsActive = false;
 
@@ -270,8 +276,8 @@ public class UpdateManager : MonoBehaviour
         if (!ballIsActive) //If there are no more balls active, then the player loses a life.
         {
             currentLives--;
-            Debug.Log($"Current Lives: {currentLives}");
-            
+            UIManager.Instance.UpdateLives(currentLives);
+
             //Debug.Log(ballsUsed);
             if (currentLives > 0) //If the player has remaining lives then a new ball spawns ready to be launched
             {
@@ -287,90 +293,26 @@ public class UpdateManager : MonoBehaviour
     #endregion
 
     #region Bricks & PowerUps
-    //public GameObject SpawnPowerUp(Vector3 spawnPoint) //Instantiates the powerup object.
-    //{
-    //    GameObject powerUp = Instantiate(gameSettings.powerUpPrefab);
-    //    powerUp.transform.position = spawnPoint;
-    //    return powerUp;
-    //}
 
-    //private Vector2[] SetPowerUpCoordinates(int rows, int colums) //When setting up the bricks this method, choses a positions at random on where to hide the powerups.
-    //{
-    //    Vector2[] coordinates = new Vector2[rows];
+    public Brick SpawnBrick() //Instantiates a new ball.
+    {
+        GameObject newBrick = Instantiate(gameSettings.brickPrefab);
+        Brick brick = new Brick(newBrick.transform);
 
-    //    List<int> availableRows = new List<int>();
-    //    List<int> availableColums = new List<int>();
+        return brick;
+    }
 
-    //    for (int i = 0; i < rows; i++)
-    //    {
-    //        availableRows.Add(i);
-    //    }
-    //    for (int i = 0; i < colums; i++)
-    //    {
-    //        availableColums.Add(i);
-    //    }
+    public void OnBrickDeath(Brick brick)
+    {
+        brickPool.ReturnBrick(brick);
 
-    //    for (int i = 0; i < rows; i++)
-    //    {
-    //        int randX = Random.Range(0, availableRows.Count);
-    //        int randY = Random.Range(0, availableColums.Count);
+        UIManager.Instance.UpdateBrickAmount(brickPool.bricksInUse.Count);
 
-    //        Vector2 pwLocation = new Vector2(availableRows[randX], availableColums[randY]);
-    //        availableRows.RemoveAt(randX);
-    //        availableColums.RemoveAt(randY);
-    //        coordinates[i] = pwLocation;
-
-    //        //Debug.Log(pwLocation);
-    //    }
-
-    //    return coordinates;
-    //}
-
-    //private void InitializeBricks() //Spawns the bricks across the screen
-    //{
-    //    Vector2[] powerUpsPos = SetPowerUpCoordinates(brickRows, brickColums);
-
-    //    for (int i = 0; i < brickRows; i++)
-    //    {
-    //        float r = Random.Range(0f, 256) / 255f;
-    //        float g = Random.Range(0f, 256) / 255f;
-    //        float b = Random.Range(0f, 256) / 255f;
-
-    //        for (int j = 0; j < brickColums; j++)
-    //        {
-    //            Brick brick = brickGrid[i,j];
-
-    //            brick.Transform.gameObject.SetActive(true);
-
-    //            Color color = new Color(r, g, b);
-
-    //            MeshRenderer mesh = brick.Transform.GetComponent<MeshRenderer>();
-    //            mesh.GetPropertyBlock(propertyBlock);
-    //            propertyBlock.SetColor("_Color", color);
-    //            mesh.SetPropertyBlock(propertyBlock);
-
-    //            if (PowerUpCheck(powerUpsPos, i, j)) //If the current position is set to have a powerup, then the block recives a powerup to spawn on death.
-    //            {
-    //                if (Random.value < 0.5f)
-    //                {
-    //                    brick.SetPowerUp(Brick.PowerUpType.MultiBall);
-    //                    //Debug.Log("Multi");
-    //                }
-    //                else
-    //                {
-    //                    brick.SetPowerUp(Brick.PowerUpType.FastPaddle);
-    //                    //Debug.Log("Speed");
-    //                }
-    //            }
-    //            else
-    //            {
-    //                brick.SetPowerUp(Brick.PowerUpType.None);
-    //            }
-
-    //            activeBricksList.Add(brick);
-    //        }
-    //    }
-    //}
+        if (brickPool.bricksInUse.Count == 0)
+        {
+            Debug.Log("YOU WIN");
+        }
+    }
 
     private bool PowerUpCheck(Vector2[] powerUpsPos, int posX, int posY) //Checks if the current brick should have a powerup.
     {
@@ -385,17 +327,6 @@ public class UpdateManager : MonoBehaviour
         return false;
     }
 
-    //public void OnBrickDestruction(Brick brick) //Destroy the given brick
-    //{
-    //    brick.Transform.gameObject.SetActive(false);
-    //    activeBricksList.Remove(brick);
-
-    //    if (activeBricksList.Count == 0)
-    //    {
-    //        //EndGame Logic goes HERE <---------
-    //    }
-    //}
-
     public void ActivateSpeedPowerUp()
     {
         player.ToggleSpeedPowerUp(true);
@@ -405,29 +336,22 @@ public class UpdateManager : MonoBehaviour
 
     #region ChangeGameState
 
-    private void StartGame()
-    {
-        //activeBricksList.Clear();
-        if (pool != null) { pool.ReturnAll(); }
-
-        for (int i = 0; i < powerUpList.Count; i++)
-        {
-            powerUpList[0].DestroyPowerUp();
-        }
-
-        InitializeGame();
-        //InitializeBricks();
-        GetBallToLaunch();
-    }
-
     private void WinGame()
     {
-        pool.ReturnAll();
+        ballPool.ReturnAll();
 
         //Debug.Log("YOU WIN");
     }
 
     #endregion
+
+    #region Other
+
+    public void IncreasePaddleHits()
+    {
+        paddleHits++;
+        UIManager.Instance.UpdatePaddleHits(paddleHits);
+    }
 
     public void DestroyGameObject(GameObject go)
     {
@@ -460,5 +384,7 @@ public class UpdateManager : MonoBehaviour
             }
         }
     }
+
+    #endregion
 
 }
