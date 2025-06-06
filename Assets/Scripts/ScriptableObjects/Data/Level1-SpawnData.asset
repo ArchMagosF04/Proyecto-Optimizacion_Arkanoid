@@ -33,7 +33,7 @@ MonoBehaviour:
     Type: 2
   - SpawnPoint: {x: 6.4, y: 19.5}
     Type: 2
-  - SpawnPoint: {x: 9.8, y: 19.5}
+  - SpawnPoint: {x: 9.6, y: 19.5}
     Type: 2
   - SpawnPoint: {x: -3.2, y: 19.5}
     Type: 2
@@ -47,7 +47,7 @@ MonoBehaviour:
     Type: 1
   - SpawnPoint: {x: 6.4, y: 18}
     Type: 1
-  - SpawnPoint: {x: 9.8, y: 18}
+  - SpawnPoint: {x: 9.6, y: 18}
     Type: 1
   - SpawnPoint: {x: -3.2, y: 18}
     Type: 1
@@ -61,7 +61,7 @@ MonoBehaviour:
     Type: 0
   - SpawnPoint: {x: 6.4, y: 16.5}
     Type: 0
-  - SpawnPoint: {x: 9.8, y: 16.5}
+  - SpawnPoint: {x: 9.6, y: 16.5}
     Type: 0
   - SpawnPoint: {x: -3.2, y: 16.5}
     Type: 0

@@ -12,6 +12,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI brickAmountText;
     [SerializeField] private TextMeshProUGUI paddleHitsText;
 
+    [SerializeField] private GameObject winScreen;
+    [SerializeField] private GameObject loseScreen;
+    [SerializeField] private GameObject endGameButtom;
+
     private void Awake()
     {
         if (Instance == null)
@@ -25,11 +29,28 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        InitializeGameScreen();
+    }
+
     public void GoToNextScene()
     {
         int nextScene = SceneManager.GetActiveScene().buildIndex + 1;
         SceneManager.LoadScene(nextScene);
     }
+
+    public void GoToScene(int index)
+    {
+        SceneManager.LoadScene(index);
+    }
+
+    public void ReLoadScene()
+    {
+        int nextScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(nextScene);
+    }
+
 
     public void QuitGame()
     {
@@ -53,5 +74,27 @@ public class UIManager : MonoBehaviour
     {
         if (paddleHitsText == null) return;
         paddleHitsText.text = $"Paddle Hits: {amount}";
+    }
+
+    public void WinScreen() 
+    {
+        if (winScreen == null || endGameButtom == null) return;
+        winScreen.SetActive(true);
+        endGameButtom.SetActive(true);
+    }
+
+    public void LoseScreen()
+    {
+        if (loseScreen == null || endGameButtom == null) return;
+        loseScreen.SetActive(true);
+        endGameButtom.SetActive(true);
+    }
+
+    private void InitializeGameScreen() 
+    {
+        if (winScreen == null || loseScreen == null || endGameButtom == null) return;
+        winScreen.SetActive(false);
+        loseScreen.SetActive(false);
+        endGameButtom.SetActive(false);
     }
 }

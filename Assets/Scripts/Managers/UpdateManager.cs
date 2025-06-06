@@ -15,12 +15,15 @@ public class UpdateManager : MonoBehaviour
     [field: SerializeField] public SO_GameSettings gameSettings { get; private set; }
     [field: SerializeField] public SO_BrickSpawn spawnData { get; private set; }
 
+    [Header("Parallax")]
+    [SerializeField] private Transform[] parallaxLayers;
+
     [Header("Game boundaries")]
     [SerializeField] private Transform rightWall;
     [SerializeField] private Transform leftWall;
     [SerializeField] private Transform topWall;
     [SerializeField] private Transform bottomWall;
-    [SerializeField] private Transform backgroundWall;
+
 
     [Space(10)]
 
@@ -53,6 +56,7 @@ public class UpdateManager : MonoBehaviour
     public List<IPowerUp> powerUpList = new List<IPowerUp>();
 
     //Game Status
+    private bool isGameDone;
     private bool ballIsActive;
     private int currentLives;
     private int paddleHits;
@@ -60,6 +64,7 @@ public class UpdateManager : MonoBehaviour
     //Other
     private float deltaTime;
     private MaterialPropertyBlock propertyBlock;
+    private Vector3 workSpace;
 
     #endregion
 
@@ -105,6 +110,8 @@ public class UpdateManager : MonoBehaviour
 
         player.Update(deltaTime, xMoveInput); //Updates the player, and sends it the movement input so it knows when to move.
 
+        ParallaxControl();
+
         for (int i = 0; i < ballPool.ballsInUse.Count; i++) //Updates all the balls that are in an active state from the pool.
         {
             ballPool.ballsInUse[i].Update(deltaTime, brickPool.bricksInUse);
@@ -118,12 +125,24 @@ public class UpdateManager : MonoBehaviour
 
     private void GameInputs() //Detectes inputs
     {
+        if (isGameDone) return;
+
         xMoveInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.Space) && !ballIsActive)
         {
             LaunchBall();
             ballIsActive = true;
+        }
+    }
+
+    private void ParallaxControl()
+    {
+        workSpace.x = -xMoveInput;
+
+        for (int i = 0; i < parallaxLayers.Length; i++)
+        {
+            parallaxLayers[i].position += workSpace * deltaTime * gameSettings.parallaxSpeed[i];
         }
     }
 
@@ -148,6 +167,7 @@ public class UpdateManager : MonoBehaviour
 
     private void InitializeGame() //Sets variables to their default values at the beggining of the game level.
     {
+        isGameDone = false;
         ballIsActive = false;
         currentLives = gameSettings.maxLives;
         paddleHits = 0;
@@ -191,11 +211,6 @@ public class UpdateManager : MonoBehaviour
             propertyBlock.SetColor("_Color", wallsColor);
             mesh.SetPropertyBlock(propertyBlock);
         }
-
-        MeshRenderer backMesh = backgroundWall.GetComponent<MeshRenderer>();
-        backMesh.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetColor("_Color", Color.black);
-        backMesh.SetPropertyBlock(propertyBlock);
     }
 
     private void SetPlayer() //Create the player paddle
@@ -210,14 +225,45 @@ public class UpdateManager : MonoBehaviour
 
     private void SpawnBricks()
     {
-        foreach (BrickSpawn spawn in spawnData.spawnList)
+        int[] powerUpIndex = new int[gameSettings.powerUpQuantity];
+
+        List<int> availableBricks = new List<int>();
+
+        for (int i = 0; i < spawnData.spawnList.Length; i++)
         {
+            availableBricks.Add(i);
+        }
+
+        for (int i = 0; i < gameSettings.powerUpQuantity; i++)
+        {
+            powerUpIndex[i] = availableBricks[Random.Range(0, availableBricks.Count)];
+            availableBricks.Remove(powerUpIndex[i]);
+        }
+
+        for(int i = 0; i < spawnData.spawnList.Length; i++)
+        {
+            BrickSpawn spawn = spawnData.spawnList[i];
+
             Brick newBrick = brickPool.GetBrick();
             newBrick.Transform.position = spawn.SpawnPoint;
 
             BrickStats stats = gameSettings.brickStats[(int)spawn.Type];
 
             newBrick.SetBrickType(stats.hitPoints, stats.blockMaterial);
+
+            if (!PowerUpCheck(powerUpIndex, i))
+            {
+                newBrick.SetPowerUp(PowerUpHeld.None);
+            }
+            else
+            {
+                newBrick.SetPowerUp(PowerUpHeld.Multiball);
+            }
+        }
+
+        foreach (int coordinate in powerUpIndex)
+        {
+            Debug.Log(coordinate);
         }
     }
 
@@ -286,6 +332,9 @@ public class UpdateManager : MonoBehaviour
             else //If the player runs out of lives then the game ends.
             {
                 //EndGame Logic Goes HERE <------
+                UIManager.Instance.LoseScreen();
+                ballPool.ReturnAll();
+                isGameDone = true;
             }
         }
     }
@@ -302,6 +351,32 @@ public class UpdateManager : MonoBehaviour
         return brick;
     }
 
+    public void SpawnPowerUp(Transform spawnpoint, PowerUpHeld type)
+    {
+        Debug.Log("SpawnPowerUp");
+
+        GameObject newPowerUp = Instantiate(gameSettings.powerUpPrefab);
+        newPowerUp.transform.position = spawnpoint.position;
+
+        IPowerUp newPU = null;
+
+        switch(type)
+        {
+            case PowerUpHeld.None:
+                Debug.LogError("Trying To Spawn a Null PowerUP");
+                break;
+            case PowerUpHeld.Multiball:
+                newPU = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit);
+                break;
+            //case PowerUpHeld.Speed:
+            //    PU_Multiball newMultiBall = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit);
+            //    break;
+        }
+
+        newPU.Activate(true);
+        powerUpList.Add(newPU);
+    }
+
     public void OnBrickDeath(Brick brick)
     {
         brickPool.ReturnBrick(brick);
@@ -310,15 +385,18 @@ public class UpdateManager : MonoBehaviour
 
         if (brickPool.bricksInUse.Count == 0)
         {
+            UIManager.Instance.WinScreen();
+            ballPool.ReturnAll();
+            isGameDone = true;
             Debug.Log("YOU WIN");
         }
     }
 
-    private bool PowerUpCheck(Vector2[] powerUpsPos, int posX, int posY) //Checks if the current brick should have a powerup.
+    private bool PowerUpCheck(int[] powerUps, int currentBrick) //Checks if the current brick should have a powerup.
     {
-        for (int i = 0; i < powerUpsPos.Length; i++)
+        for (int i = 0; i < powerUps.Length; i++)
         {
-            if (posX == (int)powerUpsPos[i].x && posY == (int)powerUpsPos[i].y)
+            if (currentBrick == powerUps[i])
             {
                 return true;
             }
@@ -346,6 +424,11 @@ public class UpdateManager : MonoBehaviour
     #endregion
 
     #region Other
+
+    public void NegateXInput()
+    {
+        xMoveInput = 0f;
+    }
 
     public void IncreasePaddleHits()
     {

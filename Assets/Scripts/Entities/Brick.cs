@@ -9,6 +9,7 @@ public class Brick : GameEntity
 
     private int hitPoints;
     private MeshRenderer mesh;
+    private PowerUpHeld powerUp;
 
     //Location of the brick's sides.
     public float topSide {  get; private set; }
@@ -34,6 +35,11 @@ public class Brick : GameEntity
         CalculateBrickSidesPositions();
     }
 
+    public void SetPowerUp(PowerUpHeld type)
+    {
+        powerUp = type;
+    }
+
     public void BrickHit() //Executed when the ball collides with the brick.
     {
         hitPoints--;
@@ -46,6 +52,7 @@ public class Brick : GameEntity
 
     public void DestroyBrick() 
     {
+        if (powerUp != PowerUpHeld.None) UpdateManager.Instance.SpawnPowerUp(Transform, powerUp);
         UpdateManager.Instance.OnBrickDeath(this);
     }
 
@@ -61,4 +68,9 @@ public class Brick : GameEntity
     {
         Transform.gameObject.SetActive(input);
     }
+}
+
+public enum PowerUpHeld 
+{
+    None, Multiball, Speed
 }

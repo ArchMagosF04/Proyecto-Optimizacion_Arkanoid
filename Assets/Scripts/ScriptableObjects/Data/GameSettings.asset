@@ -13,6 +13,12 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   maxLives: 5
+  parallaxSpeed:
+  - 0
+  - 1
+  - 3
+  - 6
+  - 9
   paddleSpeed: 10
   ballPrefab: {fileID: 3409378983391703240, guid: cfb6e8d2a6afbba44a76a8e47891d7f8, type: 3}
   ballSpeed: 15
@@ -31,3 +37,4 @@ MonoBehaviour:
     hitPoints: 4
     blockMaterial: {fileID: 2100000, guid: b95a19f039fdea64aac97580e91721d2, type: 2}
   powerUpPrefab: {fileID: 6911695989942344810, guid: 1dfb10dc25c93c0419ebe412ee24ec11, type: 3}
+  powerUpQuantity: 5

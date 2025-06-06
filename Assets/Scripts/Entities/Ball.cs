@@ -17,7 +17,7 @@ public class Ball : GameEntity
 
     private PlayerPaddle playerPaddle;
 
-    private float hitBufferLength = 0.1f;
+    private float hitBufferLength = 0f;
     private float hitBufferTimer;
 
     #endregion

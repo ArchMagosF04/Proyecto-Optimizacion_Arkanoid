@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu (fileName = "NewGameData", menuName = "Data/Game/SettingsData", order = 0)]
+[CreateAssetMenu(fileName = "NewGameData", menuName = "Data/Game/SettingsData", order = 0)]
 public class SO_GameSettings : ScriptableObject
 {
     [Header("Game Settings")]
     [field: SerializeField] public int maxLives;
+    [field: SerializeField] public float[] parallaxSpeed;
 
 
     [Header("Paddle Settings")]
@@ -25,4 +26,5 @@ public class SO_GameSettings : ScriptableObject
 
     [Header("PowerUp Settings")]
     [field: SerializeField] public GameObject powerUpPrefab;
+    [field: SerializeField] public int powerUpQuantity;
 }

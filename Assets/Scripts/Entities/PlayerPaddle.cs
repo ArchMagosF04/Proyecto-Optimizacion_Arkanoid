@@ -52,6 +52,7 @@ public class PlayerPaddle : GameEntity
         if ((direction.x > 0 && Transform.position.x + Transform.lossyScale.x / 2 >= screenRightLimit) || (direction.x < 0 && Transform.position.x - Transform.lossyScale.x / 2 <= screenLeftLimit))
         {
             direction.x = 0f;
+            UpdateManager.Instance.NegateXInput();
         }
 
         Transform.position += direction * (speed * multiplier * deltaTime);
