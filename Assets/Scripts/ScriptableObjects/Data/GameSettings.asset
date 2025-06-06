@@ -22,6 +22,7 @@ MonoBehaviour:
   paddleSpeed: 10
   ballPrefab: {fileID: 3409378983391703240, guid: cfb6e8d2a6afbba44a76a8e47891d7f8, type: 3}
   ballSpeed: 15
+  ballPoolStartAmount: 5
   brickPrefab: {fileID: 5989048275203087895, guid: 7157ecf1842801e45b084967173efd0d, type: 3}
   brickStats:
   - Type: Glass
@@ -38,3 +39,5 @@ MonoBehaviour:
     blockMaterial: {fileID: 2100000, guid: b95a19f039fdea64aac97580e91721d2, type: 2}
   powerUpPrefab: {fileID: 6911695989942344810, guid: 1dfb10dc25c93c0419ebe412ee24ec11, type: 3}
   powerUpQuantity: 5
+  multiballStats:
+    BallAmount: 50

@@ -24,27 +24,25 @@ public class BallPool
         }
     }
 
-    public Ball CreateBall() //Creates a new object.
+    public void CreateBall() //Creates a new object.
     {
         Ball newBall = UpdateManager.Instance.SpawnBall();
         newBall.ToggleGameObject(false);
         ballsOnReserve.Enqueue(newBall);
-
-        return newBall;
     }
 
     public Ball GetBall() //Gets a ball from the reserve queue, and if it's empty, then it creates a new one.
     {
         Ball ball;
 
-        if (ballsOnReserve.Count > 0)
+        if (ballsOnReserve.Count == 0)
         {
-            ball = ballsOnReserve.Dequeue();
+            CreateBall();
+            
         }
-        else
-        {
-            ball = CreateBall();
-        }
+
+        ball = ballsOnReserve.Dequeue();
+
         ball.ToggleGameObject(true);
         ballsInUse.Add(ball);
         return ball;

@@ -65,6 +65,7 @@ public class UpdateManager : MonoBehaviour
     private float deltaTime;
     private MaterialPropertyBlock propertyBlock;
     private Vector3 workSpace;
+    private float softLockTimer;
 
     #endregion
 
@@ -98,14 +99,17 @@ public class UpdateManager : MonoBehaviour
         deltaTime = Time.deltaTime;
 
         GameUpdate(deltaTime);
+        Debug.Log(ballPool.ballsInUse.Count);
 
         yield return null;
 
-        StartCoroutine(OnUpdate()); //At the end the coroutine calls itself again to continue the update loop.
+        if (!isGameDone) StartCoroutine(OnUpdate()); //At the end the coroutine calls itself again to continue the update loop.
     }
 
     private void GameUpdate(float deltaTime)
     {
+        if (isGameDone) return;
+
         GameInputs();
 
         player.Update(deltaTime, xMoveInput); //Updates the player, and sends it the movement input so it knows when to move.
@@ -125,8 +129,6 @@ public class UpdateManager : MonoBehaviour
 
     private void GameInputs() //Detectes inputs
     {
-        if (isGameDone) return;
-
         xMoveInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.Space) && !ballIsActive)
@@ -180,7 +182,7 @@ public class UpdateManager : MonoBehaviour
 
         if (ballPool == null)
         {
-            ballPool = new BallPool(5);
+            ballPool = new BallPool(gameSettings.ballPoolStartAmount);
         }
         if (brickPool == null)
         {
@@ -319,6 +321,11 @@ public class UpdateManager : MonoBehaviour
             }
         }
 
+        LifeCheck();
+    }
+
+    private void LifeCheck()
+    {
         if (!ballIsActive) //If there are no more balls active, then the player loses a life.
         {
             currentLives--;
@@ -335,6 +342,20 @@ public class UpdateManager : MonoBehaviour
                 UIManager.Instance.LoseScreen();
                 ballPool.ReturnAll();
                 isGameDone = true;
+            }
+        }
+    }
+
+    private void AntiSoftLock()
+    {
+        if(!ballIsActive)
+        {
+            if (softLockTimer < 2f) softLockTimer += Time.deltaTime;
+            else
+            {
+                ballPool.ReturnAll();
+                softLockTimer = 0f;
+                LifeCheck();
             }
         }
     }

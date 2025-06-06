@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PU_Multiball : GameEntity, IPowerUp
@@ -9,6 +10,8 @@ public class PU_Multiball : GameEntity, IPowerUp
 
     private bool isActive;
 
+    private MultiballStats stats;
+
     public PU_Multiball(Transform transform, float speed, float bottomLimit)
     {
         this.Transform = transform;
@@ -16,6 +19,7 @@ public class PU_Multiball : GameEntity, IPowerUp
         this.bottomLimit = bottomLimit;
         isActive = true;
         direction.y = -1;
+        stats = UpdateManager.Instance.gameSettings.multiballStats;
     }
 
     public void Activate(bool activate)
@@ -66,11 +70,11 @@ public class PU_Multiball : GameEntity, IPowerUp
 
     public void PowerUpEffect() //Spawns two balls and immidiatly launches them.
     {
-        UpdateManager.Instance.GetBallToLaunch(); 
-        UpdateManager.Instance.LaunchBall();
-
-        UpdateManager.Instance.GetBallToLaunch();
-        UpdateManager.Instance.LaunchBall();
+        for (int i = 0; i < stats.BallAmount; i++)
+        {
+            UpdateManager.Instance.GetBallToLaunch();
+            UpdateManager.Instance.LaunchBall();
+        }
     }
 
     public void DestroyPowerUp() //Despawn the powerup.
