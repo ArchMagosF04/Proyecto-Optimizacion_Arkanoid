@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 821cdf683a440994aa5e0bacb992c294, type: 3}
+  m_Name: GameSoundLibrary
+  m_EditorClassIdentifier: 
+  <soundData>k__BackingField:
+  - Name: BallCollision
+    Clip: {fileID: 8300000, guid: 7731c9c415376744ba573b1bd25882b2, type: 3}
+    MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
+    Volume: 1
+    WithRandomPitch: 1
+  - Name: HitAgainstBlock
+    Clip: {fileID: 8300000, guid: 757b495dc2791174c9b79add486fa11a, type: 3}
+    MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
+    Volume: 1
+    WithRandomPitch: 1
+  - Name: LostALife
+    Clip: {fileID: 8300000, guid: 33cfac4fa0649db46b8c29e3670c17e2, type: 3}
+    MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
+    Volume: 1
+    WithRandomPitch: 0
+  - Name: DestructionOfBrick
+    Clip: {fileID: 8300000, guid: d7701d8a807b074448a8d906a0f82d39, type: 3}
+    MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
+    Volume: 1
+    WithRandomPitch: 1
+  - Name: PowerUpAcquired
+    Clip: {fileID: 8300000, guid: 801b85b45ec8efe44b7f44876727f699, type: 3}
+    MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
+    Volume: 1
+    WithRandomPitch: 0
+  - Name: Victory
+    Clip: {fileID: 8300000, guid: fe27a9df69023964a8cd0a4ee7a9ce9c, type: 3}
+    MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
+    Volume: 1
+    WithRandomPitch: 0
+  - Name: Lose
+    Clip: {fileID: 8300000, guid: 95b7dbb27c382e34fbf2d037b8fb7f56, type: 3}
+    MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
+    Volume: 1
+    WithRandomPitch: 0

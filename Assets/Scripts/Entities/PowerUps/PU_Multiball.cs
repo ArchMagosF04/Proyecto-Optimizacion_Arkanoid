@@ -12,11 +12,13 @@ public class PU_Multiball : GameEntity, IPowerUp
 
     private MultiballStats stats;
 
-    public PU_Multiball(Transform transform, float speed, float bottomLimit)
+    private SoundData pickUpSound;
+    public PU_Multiball(Transform transform, float speed, float bottomLimit, SoundData pickUpSound)
     {
         this.Transform = transform;
         this.speed = speed;
         this.bottomLimit = bottomLimit;
+        this.pickUpSound = pickUpSound;
         isActive = true;
         direction.y = -1;
         stats = UpdateManager.Instance.gameSettings.multiballStats;
@@ -70,6 +72,8 @@ public class PU_Multiball : GameEntity, IPowerUp
 
     public void PowerUpEffect() //Spawns two balls and immidiatly launches them.
     {
+        UpdateManager.Instance.PlayAudioClip(pickUpSound);
+
         for (int i = 0; i < stats.BallAmount; i++)
         {
             UpdateManager.Instance.GetBallToLaunch();

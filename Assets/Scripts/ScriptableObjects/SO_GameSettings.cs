@@ -10,6 +10,13 @@ public class SO_GameSettings : ScriptableObject
     [field: SerializeField] public float[] parallaxSpeed;
 
 
+    [Header("Audio Settings")]
+    [field: SerializeField] public AudioSource sourcePrefab;
+    [field: SerializeField] public int audioSourcesStartAmount;
+    [field: SerializeField, Range(-0.05f, 0f)] public float minRandomPitch;
+    [field: SerializeField, Range(0f, 0.05f)] public float maxRandomPitch;
+
+
     [Header("Paddle Settings")]
     [field: SerializeField] public float paddleSpeed;
 

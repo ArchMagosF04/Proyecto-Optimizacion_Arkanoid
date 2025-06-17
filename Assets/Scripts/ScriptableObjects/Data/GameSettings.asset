@@ -19,6 +19,10 @@ MonoBehaviour:
   - 3
   - 6
   - 9
+  sourcePrefab: {fileID: 8643749058207724476, guid: fbc957934d724fb478192f736c498be8, type: 3}
+  audioSourcesStartAmount: 10
+  minRandomPitch: -0.01
+  maxRandomPitch: 0.01
   paddleSpeed: 10
   ballPrefab: {fileID: 3409378983391703240, guid: cfb6e8d2a6afbba44a76a8e47891d7f8, type: 3}
   ballSpeed: 15
@@ -40,4 +44,4 @@ MonoBehaviour:
   powerUpPrefab: {fileID: 6911695989942344810, guid: 1dfb10dc25c93c0419ebe412ee24ec11, type: 3}
   powerUpQuantity: 5
   multiballStats:
-    BallAmount: 50
+    BallAmount: 2

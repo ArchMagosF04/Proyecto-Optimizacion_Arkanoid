@@ -2,20 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    [Header("UI Text")]
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private TextMeshProUGUI brickAmountText;
     [SerializeField] private TextMeshProUGUI paddleHitsText;
 
+    [Header("UI Screens")]
     [SerializeField] private GameObject winScreen;
     [SerializeField] private GameObject loseScreen;
     [SerializeField] private GameObject endGameButtom;
+    [SerializeField] private GameObject settingsScreen;
 
+    [Header("Sound Sliders")]
+    [SerializeField] private Slider masterSlider;
+    [SerializeField] private Slider musicSlider;
+    [SerializeField] private Slider soundSlider;
+
+    [SerializeField] private AudioMixer audioMixer;
     private void Awake()
     {
         if (Instance == null)
@@ -31,9 +42,18 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        ToggleSettingsScreen(false);
         InitializeGameScreen();
+        SetMasterVolume(PlayerPrefs.GetFloat("SavedMasterVolume", 100));
+        SetMusicVolume(PlayerPrefs.GetFloat("SavedMusicVolume", 100));
+        SetSoundVolume(PlayerPrefs.GetFloat("SavedSoundVolume", 100));
+
+        masterSlider.onValueChanged.AddListener(SetMasterVolume);
+        musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        soundSlider.onValueChanged.AddListener(SetSoundVolume);
     }
 
+    #region SceneManagement
     public void GoToNextScene()
     {
         int nextScene = SceneManager.GetActiveScene().buildIndex + 1;
@@ -45,19 +65,20 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(index);
     }
 
-    public void ReLoadScene()
+    public void ReloadScene()
     {
         int nextScene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(nextScene);
     }
-
-
     public void QuitGame()
     {
         Debug.Log("EXIT GAME");
         Application.Quit();
     }
 
+    #endregion
+
+    #region Game HUD
     public void UpdateLives(int amount)
     {
         if (livesText == null) return;
@@ -76,6 +97,7 @@ public class UIManager : MonoBehaviour
         paddleHitsText.text = $"Paddle Hits: {amount}";
     }
 
+    #endregion
     public void WinScreen() 
     {
         if (winScreen == null || endGameButtom == null) return;
@@ -97,4 +119,70 @@ public class UIManager : MonoBehaviour
         loseScreen.SetActive(false);
         endGameButtom.SetActive(false);
     }
+
+    public void ToggleSettingsScreen(bool toggle)
+    {
+        settingsScreen.SetActive(toggle);
+    }
+
+    #region SoundSliders 
+    public void SetMasterVolume(float volume)
+    {
+        if (volume < 1)
+        {
+            volume = 0.001f;
+        }
+
+        RefreshSlider(volume, masterSlider);
+
+        PlayerPrefs.SetFloat("SavedMasterVolume", volume);
+        audioMixer.SetFloat("MasterVolume", Mathf.Log10(volume / 100) * 20);
+    }
+
+    public void SetVolumeFromMasterSlider()
+    {
+        SetMasterVolume(masterSlider.value);
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        if (volume < 1)
+        {
+            volume = 0.001f;
+        }
+
+        RefreshSlider(volume, musicSlider);
+
+        PlayerPrefs.SetFloat("SavedMusicVolume", volume);
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume / 100) * 20);
+    }
+
+    public void SetVolumeFromMusicSlider()
+    {
+        SetMusicVolume(musicSlider.value);
+    }
+
+    public void SetSoundVolume(float volume)
+    {
+        if (volume < 1)
+        {
+            volume = 0.001f;
+        }
+
+        RefreshSlider(volume, soundSlider);
+
+        PlayerPrefs.SetFloat("SavedSoundVolume", volume);
+        audioMixer.SetFloat("SoundFXVolume", Mathf.Log10(volume / 100) * 20);
+    }
+
+    public void SetVolumeFromSoundSlider()
+    {
+        SetSoundVolume(soundSlider.value);
+    }
+
+    public void RefreshSlider(float volume, Slider slider)
+    {
+        slider.value = volume;
+    }
+    #endregion
 }

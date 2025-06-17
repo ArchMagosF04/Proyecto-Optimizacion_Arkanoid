@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using Color = UnityEngine.Color;
 using Random = UnityEngine.Random;
 
@@ -14,6 +15,7 @@ public class UpdateManager : MonoBehaviour
     [Header("Game Components")]
     [field: SerializeField] public SO_GameSettings gameSettings { get; private set; }
     [field: SerializeField] public SO_BrickSpawn spawnData { get; private set; }
+    [SerializeField] private SO_SoundLibrary soundLibrary;
 
     [Header("Parallax")]
     [SerializeField] private Transform[] parallaxLayers;
@@ -53,10 +55,12 @@ public class UpdateManager : MonoBehaviour
     private Ball ballToLaunch;
     private BallPool ballPool;
     private BrickPool brickPool;
+    private AudioPool audioPool;
     public List<IPowerUp> powerUpList = new List<IPowerUp>();
 
     //Game Status
     private bool isGameDone;
+    private bool isGamePaused;
     private bool ballIsActive;
     private int currentLives;
     private int paddleHits;
@@ -84,6 +88,7 @@ public class UpdateManager : MonoBehaviour
         }
 
         propertyBlock = new MaterialPropertyBlock();
+        audioPool = new AudioPool(gameSettings.audioSourcesStartAmount);
 
         SetGameBoundaries();
         SetPlayer();
@@ -98,8 +103,9 @@ public class UpdateManager : MonoBehaviour
     {
         deltaTime = Time.deltaTime;
 
-        GameUpdate(deltaTime);
-        Debug.Log(ballPool.ballsInUse.Count);
+        if (!isGameDone)GameInputs();
+
+        if (!isGamePaused) GameUpdate(deltaTime);
 
         yield return null;
 
@@ -109,8 +115,6 @@ public class UpdateManager : MonoBehaviour
     private void GameUpdate(float deltaTime)
     {
         if (isGameDone) return;
-
-        GameInputs();
 
         player.Update(deltaTime, xMoveInput); //Updates the player, and sends it the movement input so it knows when to move.
 
@@ -129,12 +133,18 @@ public class UpdateManager : MonoBehaviour
 
     private void GameInputs() //Detectes inputs
     {
-        xMoveInput = Input.GetAxisRaw("Horizontal");
+        if(!isGamePaused) xMoveInput = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetKeyDown(KeyCode.Space) && !ballIsActive)
+        if (Input.GetKeyDown(KeyCode.Space) && !ballIsActive && !isGamePaused)
         {
             LaunchBall();
             ballIsActive = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isGamePaused = !isGamePaused;
+            UIManager.Instance.ToggleSettingsScreen(isGamePaused);
         }
     }
 
@@ -170,6 +180,7 @@ public class UpdateManager : MonoBehaviour
     private void InitializeGame() //Sets variables to their default values at the beggining of the game level.
     {
         isGameDone = false;
+        isGamePaused = false;
         ballIsActive = false;
         currentLives = gameSettings.maxLives;
         paddleHits = 0;
@@ -263,10 +274,10 @@ public class UpdateManager : MonoBehaviour
             }
         }
 
-        foreach (int coordinate in powerUpIndex)
-        {
-            Debug.Log(coordinate);
-        }
+        //foreach (int coordinate in powerUpIndex)
+        //{
+        //    Debug.Log(coordinate);
+        //}
     }
 
     #endregion
@@ -298,7 +309,7 @@ public class UpdateManager : MonoBehaviour
     public Ball SpawnBall() //Instantiates a new ball.
     {
         GameObject newBall = Instantiate(gameSettings.ballPrefab, ballSpawnPoint.position, Quaternion.identity);
-        Ball ball = new Ball(newBall.transform, gameSettings.ballSpeed, leftLimit, rightLimit, topLimit, bottomLimit, player);
+        Ball ball = new Ball(newBall.transform, gameSettings.ballSpeed, leftLimit, rightLimit, topLimit, bottomLimit, player, soundLibrary.soundData[0], soundLibrary.soundData[1]);
 
         MeshRenderer mesh = newBall.GetComponent<MeshRenderer>();
         mesh.GetPropertyBlock(propertyBlock);
@@ -330,6 +341,7 @@ public class UpdateManager : MonoBehaviour
         {
             currentLives--;
             UIManager.Instance.UpdateLives(currentLives);
+            PlayAudioClip(soundLibrary.soundData[2]);
 
             //Debug.Log(ballsUsed);
             if (currentLives > 0) //If the player has remaining lives then a new ball spawns ready to be launched
@@ -340,22 +352,9 @@ public class UpdateManager : MonoBehaviour
             {
                 //EndGame Logic Goes HERE <------
                 UIManager.Instance.LoseScreen();
+                PlayAudioClip(soundLibrary.soundData[6]);
                 ballPool.ReturnAll();
                 isGameDone = true;
-            }
-        }
-    }
-
-    private void AntiSoftLock()
-    {
-        if(!ballIsActive)
-        {
-            if (softLockTimer < 2f) softLockTimer += Time.deltaTime;
-            else
-            {
-                ballPool.ReturnAll();
-                softLockTimer = 0f;
-                LifeCheck();
             }
         }
     }
@@ -387,7 +386,7 @@ public class UpdateManager : MonoBehaviour
                 Debug.LogError("Trying To Spawn a Null PowerUP");
                 break;
             case PowerUpHeld.Multiball:
-                newPU = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit);
+                newPU = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit, soundLibrary.soundData[4]);
                 break;
             //case PowerUpHeld.Speed:
             //    PU_Multiball newMultiBall = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit);
@@ -403,10 +402,12 @@ public class UpdateManager : MonoBehaviour
         brickPool.ReturnBrick(brick);
 
         UIManager.Instance.UpdateBrickAmount(brickPool.bricksInUse.Count);
+        PlayAudioClip(soundLibrary.soundData[3]);
 
         if (brickPool.bricksInUse.Count == 0)
         {
             UIManager.Instance.WinScreen();
+            PlayAudioClip(soundLibrary.soundData[5]);
             ballPool.ReturnAll();
             isGameDone = true;
             Debug.Log("YOU WIN");
@@ -460,6 +461,35 @@ public class UpdateManager : MonoBehaviour
     public void DestroyGameObject(GameObject go)
     {
         Destroy(go);
+    }
+
+    public AudioSource SpawnAudioSource() //Instantiates a new audio source.
+    {
+        AudioSource newSource = Instantiate(gameSettings.sourcePrefab,transform);
+
+        return newSource;
+    }
+
+    public void PlayAudioClip(SoundData data)
+    {
+        AudioSource audioSource = audioPool.GetAudioSource();
+        audioSource.clip = data.Clip;
+        audioSource.outputAudioMixerGroup = data.MixerGroup;
+        audioSource.volume = data.Volume;
+        audioSource.pitch = 1;
+        if (data.WithRandomPitch)
+        {
+            audioSource.pitch += Random.Range(gameSettings.minRandomPitch, gameSettings.maxRandomPitch);
+        }
+        audioSource.Play();
+        StartCoroutine(WaitForSoundToEnd(audioSource));
+    }
+
+    private IEnumerator WaitForSoundToEnd(AudioSource source) //When the sound stops playing the source is returned to the pool.
+    {
+        yield return new WaitWhile(() => source.isPlaying);
+        source.Stop();
+        audioPool.ReturnSource(source);
     }
 
     private void OnDrawGizmos()

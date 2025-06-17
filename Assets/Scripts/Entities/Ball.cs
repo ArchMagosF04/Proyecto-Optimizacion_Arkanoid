@@ -20,9 +20,12 @@ public class Ball : GameEntity
     private float hitBufferLength = 0f;
     private float hitBufferTimer;
 
+    private SoundData ballCollision;
+    private SoundData blockHit;
+
     #endregion
 
-    public Ball(Transform transform, float speed, float leftLimit, float rightLimit, float topLimit, float bottomLimit, PlayerPaddle player) 
+    public Ball(Transform transform, float speed, float leftLimit, float rightLimit, float topLimit, float bottomLimit, PlayerPaddle player, SoundData ballCollision, SoundData blockHit) 
     {
         this.Transform = transform;
         this.speed = speed;
@@ -31,6 +34,8 @@ public class Ball : GameEntity
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
         this.playerPaddle = player;
+        this.ballCollision = ballCollision;
+        this.blockHit = blockHit;
 
         isLaunched = false;
         isActive = false;
@@ -94,10 +99,12 @@ public class Ball : GameEntity
         if (nextPosition.x + Dimensions.x >= rightLimit || nextPosition.x - Dimensions.x <= leftLimit)
         {
             direction.x *= -1;
+            UpdateManager.Instance.PlayAudioClip(ballCollision);
         }
         if (nextPosition.y + Dimensions.y >= topLimit)
         {
             direction.y *= -1;
+            UpdateManager.Instance.PlayAudioClip(ballCollision);
         }
         if (Transform.position.y - Dimensions.y <= bottomLimit)
         {
@@ -128,6 +135,7 @@ public class Ball : GameEntity
         if (onSameX && nextPosition.y - Dimensions.y <= topSide && nextPosition.y >= bottomSide)
         {
             UpdateManager.Instance.IncreasePaddleHits();
+            UpdateManager.Instance.PlayAudioClip(ballCollision);
             direction.y *= -1;
 
             float distanceFromCenter = Mathf.Abs(nextPosition.x - playerPaddle.Transform.position.x); //Depending on how far away from the center of the paddle the ball hits then it will be launched more in that direction.
@@ -161,6 +169,7 @@ public class Ball : GameEntity
                     direction.y *= -1;
                     bricks[i].BrickHit();
                     hitBufferTimer = hitBufferLength;
+                    UpdateManager.Instance.PlayAudioClip(blockHit);
                     return;
                 }
 
@@ -169,6 +178,7 @@ public class Ball : GameEntity
                     direction.x *= -1;
                     bricks[i].BrickHit();
                     hitBufferTimer = hitBufferLength;
+                    UpdateManager.Instance.PlayAudioClip(blockHit);
                 }
 
             }
