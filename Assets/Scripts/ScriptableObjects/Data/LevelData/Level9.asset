@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e2a70478221b2741ae4c8dc58d15bfc, type: 3}
+  m_Name: Level9
+  m_EditorClassIdentifier: 
+  spawnList:
+  - SpawnPoint: {x: -10.96, y: 12.29}
+    Type: 3
+  - SpawnPoint: {x: -10.96, y: 13.55}
+    Type: 3
+  - SpawnPoint: {x: -7.04, y: 12.42}
+    Type: 3
+  - SpawnPoint: {x: -7.04, y: 13.83}
+    Type: 3
+  - SpawnPoint: {x: -2.85, y: 12.01}
+    Type: 3
+  - SpawnPoint: {x: -2.85, y: 13.89}
+    Type: 3
+  - SpawnPoint: {x: 1.26, y: 11.73}
+    Type: 3
+  - SpawnPoint: {x: 5.56, y: 11.39}
+    Type: 2
+  - SpawnPoint: {x: 5.56, y: 14.16}
+    Type: 2
+  - SpawnPoint: {x: 10.33, y: 12.27}
+    Type: 1
+  - SpawnPoint: {x: 5.49, y: 8.87}
+    Type: 2
+  - SpawnPoint: {x: 5.49, y: 6.37}
+    Type: 2
+  - SpawnPoint: {x: 5.49, y: 18.85}
+    Type: 2
+  - SpawnPoint: {x: 10.27, y: 13.63}
+    Type: 1
+  - SpawnPoint: {x: 1.26, y: 13.9}
+    Type: 3
+  - SpawnPoint: {x: 1.26, y: 13.9}
+    Type: 3
+  - SpawnPoint: {x: 5.49, y: 16.35}
+    Type: 2
