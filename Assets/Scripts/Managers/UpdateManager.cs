@@ -126,6 +126,8 @@ public class UpdateManager : MonoBehaviour
         StartGame();
         SpawnBricks();
 
+        UIManager.Instance.ToggleLoadingScreen(false);
+
         StartCoroutine(OnUpdate()); //When the awake is done it begins the game loop that replaces Unity Update.
     }
     

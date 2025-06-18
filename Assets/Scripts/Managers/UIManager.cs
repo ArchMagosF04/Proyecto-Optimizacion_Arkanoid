@@ -18,8 +18,13 @@ public class UIManager : MonoBehaviour
     [Header("UI Screens")]
     [SerializeField] private GameObject winScreen;
     [SerializeField] private GameObject loseScreen;
-    [SerializeField] private GameObject endGameButtom;
     [SerializeField] private GameObject settingsScreen;
+    [SerializeField] private GameObject loadingScreen;
+
+    [Header("End Game Buttons")]
+    [SerializeField] private GameObject continueButton;
+    [SerializeField] private GameObject restartButton;
+    [SerializeField] private GameObject mainMenuButton;
 
     [Header("Sound Sliders")]
     [SerializeField] private Slider masterSlider;
@@ -100,24 +105,39 @@ public class UIManager : MonoBehaviour
     #endregion
     public void WinScreen() 
     {
-        if (winScreen == null || endGameButtom == null) return;
+        if (winScreen == null) return;
         winScreen.SetActive(true);
-        endGameButtom.SetActive(true);
+        continueButton.SetActive(true);
+        restartButton.SetActive(true);
+        mainMenuButton.SetActive(true);
     }
 
     public void LoseScreen()
     {
-        if (loseScreen == null || endGameButtom == null) return;
+        if (loseScreen == null) return;
         loseScreen.SetActive(true);
-        endGameButtom.SetActive(true);
+        restartButton.SetActive(true);
+        mainMenuButton.SetActive(true);
     }
 
     private void InitializeGameScreen() 
     {
-        if (winScreen == null || loseScreen == null || endGameButtom == null) return;
+        if (loadingScreen != null)
+        {
+            ToggleLoadingScreen(true);
+        }
+
+        if (winScreen == null || loseScreen == null) return;
         winScreen.SetActive(false);
         loseScreen.SetActive(false);
-        endGameButtom.SetActive(false);
+        continueButton.SetActive(false);
+        restartButton.SetActive(false);
+        mainMenuButton.SetActive(false);
+    }
+
+    public void ToggleLoadingScreen(bool toggle)
+    {
+        loadingScreen.SetActive(toggle);
     }
 
     public void ToggleSettingsScreen(bool toggle)

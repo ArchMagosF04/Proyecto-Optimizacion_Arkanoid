@@ -11,6 +11,33 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Level1.unity
     guid: 904a99d24d17d284d869dd81e12b85d3
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level2.unity
+    guid: bca4513a2ab7d0d4884f115737cf3838
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level3.unity
+    guid: 861cb873e2a57814689a2f9296e68064
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level4.unity
+    guid: 56ea1515dc8bdcf4ea2970e0d8e507f8
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level5.unity
+    guid: e6bf9fdcdc1270e41b25530a26bb5568
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level6.unity
+    guid: 67042cc34c33bb640964dd6f7b5d6e3a
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level7.unity
+    guid: bfc8f7bdd2542ff4fb90a31d4ef0b0d2
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level8.unity
+    guid: 2644f162701560a409d5358183016b9d
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level9.unity
+    guid: ac95eb57154149840b48c83e865252a5
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level10.unity
+    guid: ba14545407d5e42429d0bb00a09adf5f
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 34afe24e68c5517459829320990b4785, type: 2}
   m_UseUCBPForAssetBundles: 0
