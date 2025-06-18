@@ -28,7 +28,7 @@ public class SO_GameSettings : ScriptableObject
 
 
     [Header("Brick Settings")]
-    [field: SerializeField] public GameObject brickPrefab;
+    //[field: SerializeField] public GameObject brickPrefab;
     [field: SerializeField] public BrickStats[] brickStats;
 
 

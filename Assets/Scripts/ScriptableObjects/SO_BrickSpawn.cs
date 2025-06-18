@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewSpawnData", menuName = "Data/Game/SpawnData", order = 0)]
 public class SO_BrickSpawn : ScriptableObject
 {
+    [field: SerializeField] public int AssetGroup;
     [field: SerializeField] public BrickSpawn[] spawnList;
 }

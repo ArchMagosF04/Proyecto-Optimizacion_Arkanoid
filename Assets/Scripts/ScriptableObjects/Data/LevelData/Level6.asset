@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e2a70478221b2741ae4c8dc58d15bfc, type: 3}
   m_Name: Level6
   m_EditorClassIdentifier: 
+  AssetGroup: 1
   spawnList:
   - SpawnPoint: {x: -5.77, y: 6.3}
     Type: 2

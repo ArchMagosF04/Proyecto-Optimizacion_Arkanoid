@@ -19,6 +19,7 @@ public class UpdateManager : MonoBehaviour
 
     [Header("Parallax")]
     [SerializeField] private Transform[] parallaxLayers;
+    [SerializeField] private Transform parallaxCenter;
 
     [Header("Game boundaries")]
     [SerializeField] private Transform rightWall;
@@ -69,7 +70,6 @@ public class UpdateManager : MonoBehaviour
     private float deltaTime;
     private MaterialPropertyBlock propertyBlock;
     private Vector3 workSpace;
-    private float softLockTimer;
 
     #endregion
 
@@ -90,6 +90,37 @@ public class UpdateManager : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
         audioPool = new AudioPool(gameSettings.audioSourcesStartAmount);
 
+        AssetManager.Instance.OnLoadComplete += CallLevelLoad;
+        AssetManager.Instance.LoadAssets();
+    }
+
+    private void CallLevelLoad()
+    {
+        AssetManager.Instance.OnLevelLoadComplete += PostLoad;
+        AssetManager.Instance.LoadLevelGroup(spawnData.AssetGroup);
+    }
+
+    private void OnDisable()
+    {
+        AssetManager.Instance.OnLoadComplete -= CallLevelLoad;
+        AssetManager.Instance.OnLevelLoadComplete -= PostLoad;
+    }
+
+    private void SetParallax()
+    {
+        for (int i = 1; i < 6; i++)
+        {
+            GameObject newObject = AssetManager.Instance.GetGameObjectInstance(i.ToString());
+            newObject.transform.position = parallaxCenter.position;
+            newObject.transform.localScale = parallaxCenter.localScale;
+            newObject.transform.parent = parallaxCenter;
+            parallaxLayers[i - 1] = newObject.transform;
+        }
+    }
+
+    private void PostLoad()
+    {
+        SetParallax();
         SetGameBoundaries();
         SetPlayer();
         StartGame();
@@ -205,16 +236,33 @@ public class UpdateManager : MonoBehaviour
     {
         Transform[] wallMeshes = new Transform[4];
 
-        rightLimit = rightWall.position.x - rightWall.lossyScale.x / 2;
+        GameObject right = AssetManager.Instance.GetGameObjectInstance("Right");
+        right.transform.position = rightWall.position;
+        rightWall = right.transform;
+
+        GameObject left = AssetManager.Instance.GetGameObjectInstance("Left");
+        left.transform.position = leftWall.position;
+        leftWall = left.transform;
+
+        GameObject bottom = AssetManager.Instance.GetGameObjectInstance("Bottom");
+        bottom.transform.position = bottomWall.position;
+        bottomWall = bottom.transform;
+
+        GameObject top = AssetManager.Instance.GetGameObjectInstance("Top");
+        top.transform.position = topWall.position;
+        topWall = top.transform;
+
+
+        rightLimit = rightWall.position.x - 0.5f;
         wallMeshes[0] = rightWall;
 
-        leftLimit = leftWall.position.x + leftWall.lossyScale.x / 2;
+        leftLimit = leftWall.position.x + 0.5f;
         wallMeshes[1] = leftWall;
 
-        topLimit = topWall.position.y - topWall.lossyScale.y / 2;
+        topLimit = topWall.position.y - 0.5f;
         wallMeshes[2] = topWall;
 
-        bottomLimit = bottomWall.position.y + bottomWall.lossyScale.y / 2;
+        bottomLimit = bottomWall.position.y + 0.5f;
         wallMeshes[3] = bottomWall;
 
         for (int i = 0; i < wallMeshes.Length; i++)
@@ -262,7 +310,7 @@ public class UpdateManager : MonoBehaviour
 
             BrickStats stats = gameSettings.brickStats[(int)spawn.Type];
 
-            newBrick.SetBrickType(stats.hitPoints, stats.blockMaterial);
+            newBrick.SetBrickType(stats.hitPoints, AssetManager.Instance.GetMaterialAsset(stats.Type));
 
             if (!PowerUpCheck(powerUpIndex, i))
             {
@@ -365,7 +413,7 @@ public class UpdateManager : MonoBehaviour
 
     public Brick SpawnBrick() //Instantiates a new ball.
     {
-        GameObject newBrick = Instantiate(gameSettings.brickPrefab);
+        GameObject newBrick = AssetManager.Instance.GetGameObjectInstance("Brick");
         Brick brick = new Brick(newBrick.transform);
 
         return brick;

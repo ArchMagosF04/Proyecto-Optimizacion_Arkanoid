@@ -8,5 +8,4 @@ public struct BrickStats
 {
     public string Type;
     public int hitPoints;
-    public Material blockMaterial;
 }

@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Bricks
+  m_EditorClassIdentifier: 
+  m_GroupName: Bricks
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 2acc13723c8ce8340a350d992d2b9c19
+  m_SerializeEntries:
+  - m_GUID: 7157ecf1842801e45b084967173efd0d
+    m_Address: Assets/Prefabs/Brick.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5291efc549806694292d0ece9c3f33d3
+    m_Address: Assets/Art/Materials/Bricks/Glass.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b95a19f039fdea64aac97580e91721d2
+    m_Address: Assets/Art/Materials/Bricks/Metal.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11cb86c6602ffe147a50bc66a3c4245a
+    m_Address: Assets/Art/Materials/Bricks/Stone.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e29d13f76cc0c4e45a5a51863f1b081d
+    m_Address: Assets/Art/Materials/Bricks/Wood.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 89da9231260b36a4d8c880d23a6eaf89
+    m_Address: Assets/Art/Textures/Glass.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb07c1496d2b846469cbd9a3df9da769
+    m_Address: Assets/Art/Textures/steelTexture.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53a4e3a2e531a8b4abd2444ac2e0a352
+    m_Address: Assets/Art/Textures/Stone.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a175acbd674d5d14bb083e86b357945c
+    m_Address: Assets/Art/Textures/woodTexture.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 110a7533dc8845d4fb65282533d89805, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 2658a7f3399297d4085c4239dfd627d1, type: 2}
+    - {fileID: 11400000, guid: 6540e3c6761ec494e89b59599c97f917, type: 2}
