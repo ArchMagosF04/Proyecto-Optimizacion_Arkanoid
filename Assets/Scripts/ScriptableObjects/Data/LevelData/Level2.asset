@@ -12,70 +12,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e2a70478221b2741ae4c8dc58d15bfc, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
+  AssetGroup: 0
   spawnList:
-  - SpawnPoint: {x: -8.96, y: 22.63}
+  - SpawnPoint: {x: -8.5, y: 22}
     Type: 3
-  - SpawnPoint: {x: -5.06, y: 22.63}
+  - SpawnPoint: {x: -4.5, y: 22}
     Type: 3
-  - SpawnPoint: {x: 4.72, y: 22.63}
+  - SpawnPoint: {x: 4.5, y: 22}
     Type: 3
-  - SpawnPoint: {x: 8.52, y: 22.63}
+  - SpawnPoint: {x: 8.5, y: 22}
     Type: 3
-  - SpawnPoint: {x: -11.05, y: 20.22}
+  - SpawnPoint: {x: -10.5, y: 20}
     Type: 1
-  - SpawnPoint: {x: -7.35, y: 20.22}
+  - SpawnPoint: {x: -6.5, y: 20}
     Type: 1
-  - SpawnPoint: {x: -2.52, y: 20.22}
+  - SpawnPoint: {x: -2.5, y: 20}
     Type: 1
-  - SpawnPoint: {x: 2.48, y: 20.22}
+  - SpawnPoint: {x: 2.5, y: 20}
     Type: 1
-  - SpawnPoint: {x: 6.9, y: 20.22}
+  - SpawnPoint: {x: 6.5, y: 20}
     Type: 1
-  - SpawnPoint: {x: 11.17, y: 20.22}
+  - SpawnPoint: {x: 10.5, y: 20}
     Type: 1
-  - SpawnPoint: {x: -11.05, y: 17.93}
+  - SpawnPoint: {x: -11.5, y: 18}
     Type: 2
-  - SpawnPoint: {x: -7.35, y: 17.93}
+  - SpawnPoint: {x: -6.8, y: 18}
     Type: 2
-  - SpawnPoint: {x: -2.52, y: 17.93}
+  - SpawnPoint: {x: -2.5, y: 18}
     Type: 2
-  - SpawnPoint: {x: 2.48, y: 17.93}
+  - SpawnPoint: {x: 2.5, y: 18}
     Type: 2
-  - SpawnPoint: {x: 6.9, y: 17.93}
+  - SpawnPoint: {x: 6.8, y: 18}
     Type: 2
-  - SpawnPoint: {x: 11.17, y: 17.93}
+  - SpawnPoint: {x: 11.5, y: 18}
     Type: 2
-  - SpawnPoint: {x: -11.05, y: 15.74}
+  - SpawnPoint: {x: -11, y: 16}
     Type: 0
-  - SpawnPoint: {x: -7.35, y: 15.74}
+  - SpawnPoint: {x: -6.6, y: 16}
     Type: 0
-  - SpawnPoint: {x: -2.52, y: 15.74}
+  - SpawnPoint: {x: -2.5, y: 16}
     Type: 0
-  - SpawnPoint: {x: 2.48, y: 15.74}
+  - SpawnPoint: {x: 2.5, y: 16}
     Type: 0
-  - SpawnPoint: {x: 6.9, y: 15.74}
+  - SpawnPoint: {x: 6.6, y: 16}
     Type: 0
-  - SpawnPoint: {x: 11.17, y: 15.74}
+  - SpawnPoint: {x: 11, y: 16}
     Type: 0
-  - SpawnPoint: {x: -2.9, y: 13.35}
+  - SpawnPoint: {x: -2.5, y: 14}
     Type: 0
-  - SpawnPoint: {x: 2.48, y: 13.35}
+  - SpawnPoint: {x: 2.5, y: 14}
     Type: 0
-  - SpawnPoint: {x: 8.3, y: 13.35}
+  - SpawnPoint: {x: 8, y: 14}
     Type: 0
-  - SpawnPoint: {x: -8.38, y: 13.35}
+  - SpawnPoint: {x: -8, y: 14}
     Type: 0
-  - SpawnPoint: {x: -5.9, y: 11.1}
+  - SpawnPoint: {x: -6, y: 12}
     Type: 2
-  - SpawnPoint: {x: -2, y: 11.1}
+  - SpawnPoint: {x: -2, y: 12}
     Type: 2
-  - SpawnPoint: {x: 2.3, y: 11.1}
+  - SpawnPoint: {x: 2, y: 12}
     Type: 2
-  - SpawnPoint: {x: 6.5, y: 11.1}
+  - SpawnPoint: {x: 6, y: 12}
     Type: 2
-  - SpawnPoint: {x: -2.4, y: 8.8}
+  - SpawnPoint: {x: -2.5, y: 10}
     Type: 1
-  - SpawnPoint: {x: 2.4, y: 8.8}
+  - SpawnPoint: {x: 2.5, y: 10}
     Type: 1
-  - SpawnPoint: {x: 0.3, y: 6.7}
+  - SpawnPoint: {x: 0, y: 8}
     Type: 3

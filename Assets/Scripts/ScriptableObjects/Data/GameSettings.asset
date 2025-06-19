@@ -37,6 +37,6 @@ MonoBehaviour:
   - Type: Metal
     hitPoints: 4
   powerUpPrefab: {fileID: 6911695989942344810, guid: 1dfb10dc25c93c0419ebe412ee24ec11, type: 3}
-  powerUpQuantity: 0
+  powerUpQuantity: 1
   multiballStats:
     BallAmount: 2
