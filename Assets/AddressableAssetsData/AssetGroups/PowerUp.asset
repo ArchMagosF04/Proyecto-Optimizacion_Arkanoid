@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: PowerUp
+  m_EditorClassIdentifier: 
+  m_GroupName: PowerUp
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 5f834c0ee8022364db7963b11b656b00
+  m_SerializeEntries:
+  - m_GUID: 0bd44462f528c4148b73b8809877296a
+    m_Address: Assets/Art/Materials/Multiball.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f98af59fa98b5e4428055e6a93941f86
+    m_Address: Assets/Art/Materials/FastPaddle.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 110a7533dc8845d4fb65282533d89805, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 202718f550ef0ae42881142380fadfd6, type: 2}
+    - {fileID: 11400000, guid: 9bc809a1976e89044839871a88468ab0, type: 2}

@@ -25,10 +25,11 @@ public class SO_GameSettings : ScriptableObject
     [field: SerializeField] public GameObject ballPrefab;
     [field: SerializeField] public float ballSpeed;
     [field: SerializeField, Range(5, 50)] public int ballPoolStartAmount;
+    [field: SerializeField, Range(0f, 0.5f)] public float minBallLaunchAngle;
+    [field: SerializeField, Range(0f, 1f)] public float maxBallLaunchAngle;
 
 
     [Header("Brick Settings")]
-    //[field: SerializeField] public GameObject brickPrefab;
     [field: SerializeField] public BrickStats[] brickStats;
 
 
@@ -37,4 +38,5 @@ public class SO_GameSettings : ScriptableObject
     [field: SerializeField] public int powerUpQuantity;
 
     [field: SerializeField] public MultiballStats multiballStats;
+    [field: SerializeField] public FastPaddleStats fastPaddleStats;
 }

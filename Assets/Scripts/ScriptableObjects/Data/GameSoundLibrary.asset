@@ -31,7 +31,7 @@ MonoBehaviour:
   - Name: DestructionOfBrick
     Clip: {fileID: 8300000, guid: d7701d8a807b074448a8d906a0f82d39, type: 3}
     MixerGroup: {fileID: 8462389291518184158, guid: cfd530ad60781c54d8d6a37126c1a512, type: 2}
-    Volume: 1
+    Volume: 0.7
     WithRandomPitch: 1
   - Name: PowerUpAcquired
     Clip: {fileID: 8300000, guid: 801b85b45ec8efe44b7f44876727f699, type: 3}

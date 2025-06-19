@@ -11,9 +11,9 @@ public class PlayerPaddle : GameEntity
     private bool isSpeedPowerUpActive;
 
     private float multiplier = 1f;
-    private float extraSpeed = 2f;
+    private float extraSpeed;
 
-    private float multiplierDuration = 7f;
+    private float multiplierDuration;
     private float multiplierTimer;
 
     private MeshRenderer meshRenderer;
@@ -22,7 +22,7 @@ public class PlayerPaddle : GameEntity
     private Color baseColor;
     private Color speedColor;
 
-    public PlayerPaddle(Transform transform, float speed, float leftLimit, float rightLimit, MaterialPropertyBlock propertyBlock, Color baseColor, Color speedColor)
+    public PlayerPaddle(Transform transform, float speed, float leftLimit, float rightLimit, MaterialPropertyBlock propertyBlock, Color baseColor, Color speedColor, float extraSpeed, float multiplierDuration)
     {
         this.Transform = transform;
         this.speed = speed;
@@ -34,6 +34,8 @@ public class PlayerPaddle : GameEntity
 
         this.baseColor = baseColor;
         this.speedColor = speedColor;
+        this.extraSpeed = extraSpeed;
+        this.multiplierDuration = multiplierDuration;
 
         Dimensions = new Vector2(transform.lossyScale.x / 2, transform.lossyScale.y / 2);
     }
@@ -61,18 +63,16 @@ public class PlayerPaddle : GameEntity
     public void ToggleSpeedPowerUp(bool value) //Activates/Deactivates the bonus speed received from the speed powerup.
     {
         Color color = Color.white;
+        isSpeedPowerUpActive = value;
 
         if (value) 
         {
-            isSpeedPowerUpActive = true;
             multiplier = extraSpeed;
             multiplierTimer = multiplierDuration;
-
             color = speedColor;
         }
         else
         {
-            isSpeedPowerUpActive = false;
             multiplier = 1f;
             color = baseColor;
         }

@@ -125,14 +125,6 @@ public class AssetManager : MonoBehaviour
         {
             OnLoadComplete?.Invoke();
             MainAssetsLoaded = true;
-            foreach (var item in GOLoadedAssets)
-            {
-                Debug.Log(item.Key);
-            }
-            foreach (var item in MatLoadedAssets)
-            {
-                Debug.Log(item.Key);
-            }
         }
     }
 
@@ -213,11 +205,21 @@ public class AssetManager : MonoBehaviour
         return null;
     }
 
-    public Material GetMaterialAsset(string assetName)
+    public Material GetMaterialWithTextureAsset(string assetName)
     {
         if (MatLoadedAssets.ContainsKey(assetName) && TexLoadedAssets.ContainsKey(assetName))
         {
             MatLoadedAssets[assetName].SetTexture("_MainTex", TexLoadedAssets[assetName]);
+            return MatLoadedAssets[assetName];
+        }
+        Debug.LogError($"Asset '{assetName}' not found.");
+        return null;
+    }
+
+    public Material GetMaterialAsset(string assetName)
+    {
+        if (MatLoadedAssets.ContainsKey(assetName))
+        {
             return MatLoadedAssets[assetName];
         }
         Debug.LogError($"Asset '{assetName}' not found.");

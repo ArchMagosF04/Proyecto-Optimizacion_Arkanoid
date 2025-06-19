@@ -278,7 +278,7 @@ public class UpdateManager : MonoBehaviour
 
     private void SetPlayer() //Create the player paddle
     {
-        player = new PlayerPaddle(paddle, gameSettings.paddleSpeed, leftLimit, rightLimit, propertyBlock, paddleColor, paddleSpeedColor);
+        player = new PlayerPaddle(paddle, gameSettings.paddleSpeed, leftLimit, rightLimit, propertyBlock, paddleColor, paddleSpeedColor, gameSettings.fastPaddleStats.speedMultiplier, gameSettings.fastPaddleStats.duration);
 
         MeshRenderer mesh = paddle.GetComponent<MeshRenderer>();
         mesh.GetPropertyBlock(propertyBlock);
@@ -312,7 +312,7 @@ public class UpdateManager : MonoBehaviour
 
             BrickStats stats = gameSettings.brickStats[(int)spawn.Type];
 
-            newBrick.SetBrickType(stats.hitPoints, AssetManager.Instance.GetMaterialAsset(stats.Type));
+            newBrick.SetBrickType(stats.hitPoints, AssetManager.Instance.GetMaterialWithTextureAsset(stats.Type));
 
             if (!PowerUpCheck(powerUpIndex, i))
             {
@@ -320,14 +320,10 @@ public class UpdateManager : MonoBehaviour
             }
             else
             {
-                newBrick.SetPowerUp(PowerUpHeld.Multiball);
+                if (Random.value < 0.5f) newBrick.SetPowerUp(PowerUpHeld.Multiball);
+                else newBrick.SetPowerUp(PowerUpHeld.Speed);
             }
         }
-
-        //foreach (int coordinate in powerUpIndex)
-        //{
-        //    Debug.Log(coordinate);
-        //}
     }
 
     #endregion
@@ -338,7 +334,11 @@ public class UpdateManager : MonoBehaviour
     {
         Vector3 launchDirection = Vector3.zero;
 
-        float xDir = Random.Range(0.25f, 0.6f); //Gets and angle in the range of the arc. 
+        float min = gameSettings.minBallLaunchAngle;
+        float max = gameSettings.maxBallLaunchAngle;
+        float xDir = 0f;
+
+        if (min < max) xDir = Random.Range(min, max); //Gets and angle in the range of the arc. 
 
         if (Random.value < 0.5f) //Then based on a coin flip, it determines if it launches it to the left or to the right of the paddle. This is done to avoid right angles.
         {
@@ -393,7 +393,6 @@ public class UpdateManager : MonoBehaviour
             UIManager.Instance.UpdateLives(currentLives);
             PlayAudioClip(soundLibrary.soundData[2]);
 
-            //Debug.Log(ballsUsed);
             if (currentLives > 0) //If the player has remaining lives then a new ball spawns ready to be launched
             {
                 GetBallToLaunch();
@@ -423,10 +422,10 @@ public class UpdateManager : MonoBehaviour
 
     public void SpawnPowerUp(Transform spawnpoint, PowerUpHeld type)
     {
-        Debug.Log("SpawnPowerUp");
-
         GameObject newPowerUp = Instantiate(gameSettings.powerUpPrefab);
         newPowerUp.transform.position = spawnpoint.position;
+
+        MeshRenderer renderer = newPowerUp.GetComponent<MeshRenderer>();
 
         IPowerUp newPU = null;
 
@@ -437,10 +436,12 @@ public class UpdateManager : MonoBehaviour
                 break;
             case PowerUpHeld.Multiball:
                 newPU = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit, soundLibrary.soundData[4]);
+                renderer.material = AssetManager.Instance.GetMaterialAsset("Multiball");
                 break;
-            //case PowerUpHeld.Speed:
-            //    PU_Multiball newMultiBall = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit);
-            //    break;
+            case PowerUpHeld.Speed:
+                newPU = new PU_FastPaddle(newPowerUp.transform, 15f, bottomLimit, soundLibrary.soundData[4]);
+                renderer.material = AssetManager.Instance.GetMaterialAsset("FastPaddle");
+                break;
         }
 
         newPU.Activate(true);

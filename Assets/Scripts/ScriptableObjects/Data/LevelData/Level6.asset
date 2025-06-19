@@ -14,53 +14,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGroup: 1
   spawnList:
-  - SpawnPoint: {x: -5.77, y: 6.3}
+  - SpawnPoint: {x: -6, y: 6.3}
     Type: 2
-  - SpawnPoint: {x: -1.88, y: 6.3}
+  - SpawnPoint: {x: -2, y: 6.3}
     Type: 1
-  - SpawnPoint: {x: 2.32, y: 6.3}
+  - SpawnPoint: {x: 2, y: 6.3}
     Type: 2
-  - SpawnPoint: {x: 6.2, y: 6.3}
+  - SpawnPoint: {x: 6, y: 6.3}
     Type: 1
-  - SpawnPoint: {x: 7.16, y: 8.2}
+  - SpawnPoint: {x: 7.5, y: 8.2}
     Type: 3
-  - SpawnPoint: {x: -7.7, y: 8.2}
+  - SpawnPoint: {x: -7.5, y: 8.2}
     Type: 3
-  - SpawnPoint: {x: 6.48, y: 10}
+  - SpawnPoint: {x: 7, y: 10}
     Type: 2
-  - SpawnPoint: {x: -6.93, y: 10}
+  - SpawnPoint: {x: -7, y: 10}
     Type: 2
-  - SpawnPoint: {x: 6.18, y: 12.1}
+  - SpawnPoint: {x: 6.5, y: 12}
     Type: 1
-  - SpawnPoint: {x: -6.28, y: 12.1}
+  - SpawnPoint: {x: -6.5, y: 12}
     Type: 1
-  - SpawnPoint: {x: 5.81, y: 13.7}
+  - SpawnPoint: {x: 6, y: 14}
     Type: 0
-  - SpawnPoint: {x: -5.58, y: 13.7}
+  - SpawnPoint: {x: -6, y: 14}
     Type: 0
-  - SpawnPoint: {x: 4.65, y: 15.4}
+  - SpawnPoint: {x: 5.5, y: 15.5}
     Type: 3
-  - SpawnPoint: {x: -4.98, y: 15.4}
+  - SpawnPoint: {x: -5.5, y: 15.5}
     Type: 3
-  - SpawnPoint: {x: 3.85, y: 17.7}
+  - SpawnPoint: {x: 4.5, y: 17}
     Type: 2
-  - SpawnPoint: {x: 3.08, y: 19.3}
+  - SpawnPoint: {x: 3, y: 18.5}
     Type: 1
-  - SpawnPoint: {x: 2.4, y: 21.1}
+  - SpawnPoint: {x: 2, y: 20}
     Type: 0
-  - SpawnPoint: {x: -2.4, y: 21.1}
+  - SpawnPoint: {x: -2, y: 20}
     Type: 0
-  - SpawnPoint: {x: -0.1, y: 23.18}
+  - SpawnPoint: {x: 0, y: 22}
     Type: 3
-  - SpawnPoint: {x: -3.2, y: 19.2}
+  - SpawnPoint: {x: -3, y: 18.5}
     Type: 1
-  - SpawnPoint: {x: -4.1, y: 17.6}
+  - SpawnPoint: {x: -4.5, y: 17}
     Type: 2
-  - SpawnPoint: {x: -0.13, y: 15.69}
+  - SpawnPoint: {x: 0, y: 15.69}
     Type: 0
-  - SpawnPoint: {x: -0.13, y: 14.13}
+  - SpawnPoint: {x: 0, y: 14.13}
     Type: 0
-  - SpawnPoint: {x: -0.13, y: 12.35}
+  - SpawnPoint: {x: 0, y: 12.35}
     Type: 0
-  - SpawnPoint: {x: -0.13, y: 8.86}
+  - SpawnPoint: {x: 0, y: 8.86}
     Type: 0

@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject loseScreen;
     [SerializeField] private GameObject settingsScreen;
     [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private GameObject levelSelectScreen;
 
     [Header("End Game Buttons")]
     [SerializeField] private GameObject continueButton;
@@ -47,6 +48,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        if(levelSelectScreen != null) levelSelectScreen.SetActive(false);
         ToggleSettingsScreen(false);
         InitializeGameScreen();
         SetMasterVolume(PlayerPrefs.GetFloat("SavedMasterVolume", 100));
@@ -143,6 +145,11 @@ public class UIManager : MonoBehaviour
     public void ToggleSettingsScreen(bool toggle)
     {
         settingsScreen.SetActive(toggle);
+    }
+
+    public void ToggleLevelSelectScreen(bool toggle)
+    {
+        levelSelectScreen.SetActive(toggle);
     }
 
     #region SoundSliders 

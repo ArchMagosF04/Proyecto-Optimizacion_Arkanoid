@@ -8,11 +8,13 @@ public class PU_FastPaddle : GameEntity, IPowerUp
 
     private bool isActive;
 
-    public PU_FastPaddle(Transform transform, float speed, float bottomLimit)
+    private SoundData pickUpSound;
+    public PU_FastPaddle(Transform transform, float speed, float bottomLimit, SoundData pickUpSound)
     {
         this.Transform = transform;
         this.speed = speed;
         this.bottomLimit = bottomLimit;
+        this.pickUpSound = pickUpSound;
         isActive = true;
         direction.y = -1;
     }

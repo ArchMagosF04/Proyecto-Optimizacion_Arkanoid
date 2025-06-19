@@ -14,37 +14,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGroup: 1
   spawnList:
-  - SpawnPoint: {x: -10.96, y: 12.29}
-    Type: 3
-  - SpawnPoint: {x: -10.96, y: 13.55}
-    Type: 3
-  - SpawnPoint: {x: -7.04, y: 12.42}
-    Type: 3
-  - SpawnPoint: {x: -7.04, y: 13.83}
-    Type: 3
-  - SpawnPoint: {x: -2.85, y: 12.01}
-    Type: 3
-  - SpawnPoint: {x: -2.85, y: 13.89}
-    Type: 3
-  - SpawnPoint: {x: 1.26, y: 11.73}
-    Type: 3
-  - SpawnPoint: {x: 5.56, y: 11.39}
+  - SpawnPoint: {x: 5.5, y: 13.5}
     Type: 2
-  - SpawnPoint: {x: 5.56, y: 14.16}
+  - SpawnPoint: {x: 5.5, y: 16}
     Type: 2
-  - SpawnPoint: {x: 10.33, y: 12.27}
+  - SpawnPoint: {x: 9, y: 14}
     Type: 1
-  - SpawnPoint: {x: 5.49, y: 8.87}
+  - SpawnPoint: {x: 5.5, y: 11}
     Type: 2
-  - SpawnPoint: {x: 5.49, y: 6.37}
+  - SpawnPoint: {x: 5.5, y: 8.5}
     Type: 2
-  - SpawnPoint: {x: 5.49, y: 18.85}
+  - SpawnPoint: {x: 5.5, y: 21}
     Type: 2
-  - SpawnPoint: {x: 10.27, y: 13.63}
+  - SpawnPoint: {x: 9, y: 15.5}
     Type: 1
-  - SpawnPoint: {x: 1.26, y: 13.9}
-    Type: 3
-  - SpawnPoint: {x: 1.26, y: 13.9}
-    Type: 3
-  - SpawnPoint: {x: 5.49, y: 16.35}
+  - SpawnPoint: {x: 5.5, y: 18.5}
     Type: 2
+  - SpawnPoint: {x: 12.5, y: 15.5}
+    Type: 1
+  - SpawnPoint: {x: 12.5, y: 14}
+    Type: 1
+  - SpawnPoint: {x: 2, y: 13}
+    Type: 3
+  - SpawnPoint: {x: 2, y: 16.5}
+    Type: 3
+  - SpawnPoint: {x: -2, y: 16.5}
+    Type: 3
+  - SpawnPoint: {x: -2, y: 13}
+    Type: 3
+  - SpawnPoint: {x: -6, y: 13}
+    Type: 3
+  - SpawnPoint: {x: -6, y: 16.5}
+    Type: 3
+  - SpawnPoint: {x: -9.5, y: 16}
+    Type: 3
+  - SpawnPoint: {x: -9.5, y: 13.5}
+    Type: 3
+  - SpawnPoint: {x: -11, y: 14.75}
+    Type: 3

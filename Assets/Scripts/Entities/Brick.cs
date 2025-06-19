@@ -23,8 +23,6 @@ public class Brick : GameEntity
     {
        this.Transform = transform;
 
-        //CalculateBrickSidesPositions();
-
         mesh = transform.GetComponent<MeshRenderer>();
     }
 
