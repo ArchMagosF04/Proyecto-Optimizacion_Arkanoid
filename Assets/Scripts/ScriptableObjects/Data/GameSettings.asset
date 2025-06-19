@@ -19,6 +19,7 @@ MonoBehaviour:
   - 3
   - 6
   - 9
+  godModeAmount: 50
   sourcePrefab: {fileID: 8643749058207724476, guid: fbc957934d724fb478192f736c498be8, type: 3}
   audioSourcesStartAmount: 10
   minRandomPitch: -0.05
@@ -40,6 +41,7 @@ MonoBehaviour:
     hitPoints: 4
   powerUpPrefab: {fileID: 6911695989942344810, guid: 1dfb10dc25c93c0419ebe412ee24ec11, type: 3}
   powerUpQuantity: 5
+  powerUpFallSpeed: 13
   multiballStats:
     BallAmount: 2
   fastPaddleStats:

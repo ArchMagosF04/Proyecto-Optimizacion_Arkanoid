@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    [SerializeField] private Toggle godModeToggle;
+
     [Header("UI Text")]
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private TextMeshProUGUI brickAmountText;
@@ -54,6 +56,12 @@ public class UIManager : MonoBehaviour
         SetMasterVolume(PlayerPrefs.GetFloat("SavedMasterVolume", 100));
         SetMusicVolume(PlayerPrefs.GetFloat("SavedMusicVolume", 100));
         SetSoundVolume(PlayerPrefs.GetFloat("SavedSoundVolume", 100));
+
+        if (godModeToggle != null)
+        {
+            if (PlayerPrefs.GetInt("GodMode", 0) == 1) godModeToggle.isOn = true;
+            else godModeToggle.isOn = false;
+        }
 
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
@@ -135,6 +143,15 @@ public class UIManager : MonoBehaviour
         continueButton.SetActive(false);
         restartButton.SetActive(false);
         mainMenuButton.SetActive(false);
+    }
+
+    public void SetGodModeToggle(bool toggle)
+    {
+        if(toggle)
+        {
+            PlayerPrefs.SetInt("GodMode", 1);
+        }
+        else PlayerPrefs.SetInt("GodMode", 0);
     }
 
     public void ToggleLoadingScreen(bool toggle)

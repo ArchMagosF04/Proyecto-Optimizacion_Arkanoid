@@ -8,6 +8,7 @@ public class SO_GameSettings : ScriptableObject
     [Header("Game Settings")]
     [field: SerializeField] public int maxLives;
     [field: SerializeField] public float[] parallaxSpeed;
+    [field: SerializeField, Range(10, 50)] public int godModeAmount;
 
 
     [Header("Audio Settings")]
@@ -36,6 +37,7 @@ public class SO_GameSettings : ScriptableObject
     [Header("PowerUp Settings")]
     [field: SerializeField] public GameObject powerUpPrefab;
     [field: SerializeField] public int powerUpQuantity;
+    [field: SerializeField] public float powerUpFallSpeed;
 
     [field: SerializeField] public MultiballStats multiballStats;
     [field: SerializeField] public FastPaddleStats fastPaddleStats;

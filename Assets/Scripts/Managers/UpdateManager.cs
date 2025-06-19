@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Audio;
 using Color = UnityEngine.Color;
@@ -70,6 +71,7 @@ public class UpdateManager : MonoBehaviour
     private float deltaTime;
     private MaterialPropertyBlock propertyBlock;
     private Vector3 workSpace;
+    public bool godMode;
 
     #endregion
 
@@ -120,6 +122,9 @@ public class UpdateManager : MonoBehaviour
 
     private void PostLoad()
     {
+        if (PlayerPrefs.GetInt("GodMode", 0) == 1) godMode = true;
+        else godMode = false;
+
         SetParallax();
         SetGameBoundaries();
         SetPlayer();
@@ -172,6 +177,15 @@ public class UpdateManager : MonoBehaviour
         {
             LaunchBall();
             ballIsActive = true;
+
+            if (godMode)
+            {
+                for(int i = 0; i < gameSettings.godModeAmount; i++)
+                {
+                    GetBallToLaunch();
+                    LaunchBall();
+                }
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -435,11 +449,11 @@ public class UpdateManager : MonoBehaviour
                 Debug.LogError("Trying To Spawn a Null PowerUP");
                 break;
             case PowerUpHeld.Multiball:
-                newPU = new PU_Multiball(newPowerUp.transform, 15f, bottomLimit, soundLibrary.soundData[4]);
+                newPU = new PU_Multiball(newPowerUp.transform, gameSettings.powerUpFallSpeed, bottomLimit, soundLibrary.soundData[4]);
                 renderer.material = AssetManager.Instance.GetMaterialAsset("Multiball");
                 break;
             case PowerUpHeld.Speed:
-                newPU = new PU_FastPaddle(newPowerUp.transform, 15f, bottomLimit, soundLibrary.soundData[4]);
+                newPU = new PU_FastPaddle(newPowerUp.transform, gameSettings.powerUpFallSpeed, bottomLimit, soundLibrary.soundData[4]);
                 renderer.material = AssetManager.Instance.GetMaterialAsset("FastPaddle");
                 break;
         }
