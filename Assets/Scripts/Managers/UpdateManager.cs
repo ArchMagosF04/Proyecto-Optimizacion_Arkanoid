@@ -122,8 +122,7 @@ public class UpdateManager : MonoBehaviour
 
     private void PostLoad()
     {
-        if (PlayerPrefs.GetInt("GodMode", 0) == 1) godMode = true;
-        else godMode = false;
+        SetGodModeStatus();
 
         SetParallax();
         SetGameBoundaries();
@@ -134,6 +133,12 @@ public class UpdateManager : MonoBehaviour
         UIManager.Instance.ToggleLoadingScreen(false);
 
         StartCoroutine(OnUpdate()); //When the awake is done it begins the game loop that replaces Unity Update.
+    }
+
+    public void SetGodModeStatus()
+    {
+        if (PlayerPrefs.GetInt("GodMode", 0) == 1) godMode = true;
+        else godMode = false;
     }
     
 

@@ -152,6 +152,8 @@ public class UIManager : MonoBehaviour
             PlayerPrefs.SetInt("GodMode", 1);
         }
         else PlayerPrefs.SetInt("GodMode", 0);
+
+        if (UpdateManager.Instance != null) UpdateManager.Instance.SetGodModeStatus();
     }
 
     public void ToggleLoadingScreen(bool toggle)
