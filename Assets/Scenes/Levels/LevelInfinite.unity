@@ -284,8 +284,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1428134582}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -774,8 +774,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -4, y: 30}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -4, y: 56.8}
+  m_SizeDelta: {x: 210, y: 50}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &189643858
 MonoBehaviour:
@@ -797,7 +797,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: level 10
+  m_text: level Infinite
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5673ffce4a951c146b09dbbbf04042c7, type: 2}
   m_sharedMaterial: {fileID: 498295741982111826, guid: 5673ffce4a951c146b09dbbbf04042c7, type: 2}
@@ -1217,7 +1217,7 @@ MonoBehaviour:
   loadingScreen: {fileID: 2052168213}
   levelSelectScreen: {fileID: 0}
   continueButton: {fileID: 1503575900}
-  restartButton: {fileID: 1212453671}
+  restartButton: {fileID: 0}
   mainMenuButton: {fileID: 896626941}
   masterSlider: {fileID: 347156097}
   musicSlider: {fileID: 1473862150}
@@ -3038,7 +3038,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 338}
+  m_AnchoredPosition: {x: 0, y: 233}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &953878388
@@ -3087,12 +3087,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 335645044}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: GoToScene
-        m_Mode: 3
+        m_MethodName: ReloadScene
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 11
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3884,8 +3884,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 652426445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3996,7 +3996,7 @@ RectTransform:
   m_Father: {fileID: 1706261520}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4370,7 +4370,7 @@ RectTransform:
   m_Father: {fileID: 598531696}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4860,7 +4860,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1666644099
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5223,8 +5223,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1305430492}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5445,7 +5445,7 @@ RectTransform:
   m_Father: {fileID: 1576589791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6082,7 +6082,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <gameSettings>k__BackingField: {fileID: 11400000, guid: be1bd7e725d04d548b3cdcf54cd93c79, type: 2}
-  <spawnData>k__BackingField: {fileID: 11400000, guid: def7f21107a06bc448ffe78954a43dfc, type: 2}
+  <spawnData>k__BackingField: {fileID: 11400000, guid: 5dfbac9c7d19c7e40a2c3e1e18da7fff, type: 2}
   soundLibrary: {fileID: 11400000, guid: 76df8c661b3083245a55be733ab1ce5c, type: 2}
   parallaxLayers:
   - {fileID: 0}

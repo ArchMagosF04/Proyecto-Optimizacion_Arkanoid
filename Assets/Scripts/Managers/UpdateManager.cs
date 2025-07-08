@@ -16,6 +16,7 @@ public class UpdateManager : MonoBehaviour
     [Header("Game Components")]
     [field: SerializeField] public SO_GameSettings gameSettings { get; private set; }
     [field: SerializeField] public SO_BrickSpawn spawnData { get; private set; }
+    
     [SerializeField] private SO_SoundLibrary soundLibrary;
 
     [Header("Parallax")]
@@ -123,6 +124,8 @@ public class UpdateManager : MonoBehaviour
     private void PostLoad()
     {
         SetGodModeStatus();
+
+        if (spawnData.isRandom) spawnData.GenerateRandomLevel();
 
         SetParallax();
         SetGameBoundaries();

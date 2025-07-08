@@ -118,7 +118,7 @@ public class UIManager : MonoBehaviour
         if (winScreen == null) return;
         winScreen.SetActive(true);
         continueButton.SetActive(true);
-        restartButton.SetActive(true);
+        if (restartButton != null) restartButton.SetActive(true);
         mainMenuButton.SetActive(true);
     }
 
@@ -126,7 +126,7 @@ public class UIManager : MonoBehaviour
     {
         if (loseScreen == null) return;
         loseScreen.SetActive(true);
-        restartButton.SetActive(true);
+        if (restartButton != null) restartButton.SetActive(true);
         mainMenuButton.SetActive(true);
     }
 
@@ -141,7 +141,7 @@ public class UIManager : MonoBehaviour
         winScreen.SetActive(false);
         loseScreen.SetActive(false);
         continueButton.SetActive(false);
-        restartButton.SetActive(false);
+        if (restartButton != null) restartButton.SetActive(false);
         mainMenuButton.SetActive(false);
     }
 

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e2a70478221b2741ae4c8dc58d15bfc, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
+  AssetGroup: 0
   spawnList:
   - SpawnPoint: {x: 0, y: 21}
     Type: 1
@@ -69,3 +70,9 @@ MonoBehaviour:
     Type: 0
   - SpawnPoint: {x: -9.6, y: 16.5}
     Type: 0
+  isRandom: 0
+  maxRows: 2
+  maxColumns: 2
+  startRowHeight: 22
+  rowPadding: 0.2
+  columnPadding: 0.2

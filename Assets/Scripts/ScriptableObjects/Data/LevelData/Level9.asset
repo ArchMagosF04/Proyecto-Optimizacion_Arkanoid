@@ -52,3 +52,9 @@ MonoBehaviour:
     Type: 3
   - SpawnPoint: {x: -11, y: 14.75}
     Type: 3
+  isRandom: 0
+  maxRows: 2
+  maxColumns: 2
+  startRowHeight: 22
+  rowPadding: 0.2
+  columnPadding: 0.2
