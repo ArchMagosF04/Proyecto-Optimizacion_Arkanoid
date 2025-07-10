@@ -14,45 +14,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetGroup: 1
   spawnList:
-  - SpawnPoint: {x: 3.2, y: 22}
+  - SpawnPoint: {x: 13.053051, y: 22}
     Type: 2
-  - SpawnPoint: {x: 0.000000044703484, y: 22}
+  - SpawnPoint: {x: 8.702034, y: 22}
     Type: 3
-  - SpawnPoint: {x: -3.2, y: 22}
-    Type: 2
-  - SpawnPoint: {x: 3.2, y: 20.8}
+  - SpawnPoint: {x: 4.351017, y: 22}
     Type: 0
-  - SpawnPoint: {x: 0.000000044703484, y: 20.8}
-    Type: 1
-  - SpawnPoint: {x: -3.2, y: 20.8}
-    Type: 1
-  - SpawnPoint: {x: 3.2, y: 19.6}
-    Type: 1
-  - SpawnPoint: {x: 0.000000044703484, y: 19.6}
-    Type: 1
-  - SpawnPoint: {x: -3.2, y: 19.6}
-    Type: 1
-  - SpawnPoint: {x: 3.2, y: 18.4}
-    Type: 2
-  - SpawnPoint: {x: 0.000000044703484, y: 18.4}
+  - SpawnPoint: {x: -0.00000035762787, y: 22}
     Type: 3
-  - SpawnPoint: {x: -3.2, y: 18.4}
+  - SpawnPoint: {x: -4.3510175, y: 22}
     Type: 1
-  - SpawnPoint: {x: 3.2, y: 17.2}
+  - SpawnPoint: {x: -8.702035, y: 22}
+    Type: 0
+  - SpawnPoint: {x: -13.053052, y: 22}
     Type: 1
-  - SpawnPoint: {x: 0.000000044703484, y: 17.2}
+  - SpawnPoint: {x: 13.053051, y: 20.747074}
+    Type: 0
+  - SpawnPoint: {x: 8.702034, y: 20.747074}
     Type: 2
-  - SpawnPoint: {x: -3.2, y: 17.2}
+  - SpawnPoint: {x: 4.351017, y: 20.747074}
+    Type: 0
+  - SpawnPoint: {x: -0.00000035762787, y: 20.747074}
+    Type: 0
+  - SpawnPoint: {x: -4.3510175, y: 20.747074}
+    Type: 1
+  - SpawnPoint: {x: -8.702035, y: 20.747074}
+    Type: 1
+  - SpawnPoint: {x: -13.053052, y: 20.747074}
+    Type: 0
+  - SpawnPoint: {x: 13.053051, y: 19.494148}
+    Type: 0
+  - SpawnPoint: {x: 8.702034, y: 19.494148}
     Type: 3
-  - SpawnPoint: {x: 3.2, y: 16}
+  - SpawnPoint: {x: 4.351017, y: 19.494148}
     Type: 3
-  - SpawnPoint: {x: 0.000000044703484, y: 16}
+  - SpawnPoint: {x: -0.00000035762787, y: 19.494148}
+    Type: 3
+  - SpawnPoint: {x: -4.3510175, y: 19.494148}
     Type: 2
-  - SpawnPoint: {x: -3.2, y: 16}
+  - SpawnPoint: {x: -8.702035, y: 19.494148}
+    Type: 0
+  - SpawnPoint: {x: -13.053052, y: 19.494148}
     Type: 2
   isRandom: 1
   maxRows: 10
   maxColumns: 7
   startRowHeight: 22
-  rowPadding: 0.2
-  columnPadding: 0.2
+  maxRowPadding: 0.8
+  maxColumnPadding: 1.5

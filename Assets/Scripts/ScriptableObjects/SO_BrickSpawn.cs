@@ -10,19 +10,23 @@ public class SO_BrickSpawn : ScriptableObject
 
     [field: SerializeField] public bool isRandom = false;
 
+
     [Header("Brick Amount Range")]
     [SerializeField, Range(2f, 10f)] private int maxRows;
     [SerializeField, Range(2f, 7f)] private int maxColumns;
 
     [Header("Position")]
     [SerializeField, Range(10f, 22f)] private float startRowHeight = 22f;
-    [SerializeField, Range(0.2f, 2f)] private float rowPadding;
-    [SerializeField, Range(0.2f, 2f)] private float columnPadding;
+    [SerializeField, Range(0.2f, 0.8f)] private float maxRowPadding;
+    [SerializeField, Range(0.1f, 1.5f)] private float maxColumnPadding;
 
     public void GenerateRandomLevel()
     {
         int rows = Random.Range(3, maxRows + 1);
         int columns = Random.Range(3, maxColumns + 1);
+
+        float rowPadding = Random.Range(0.2f, maxRowPadding);
+        float columnPadding = Random.Range(0.1f, maxColumnPadding);
 
         spawnList = new BrickSpawn[rows * columns];
 
